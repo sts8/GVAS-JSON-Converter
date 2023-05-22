@@ -2,6 +2,12 @@
 
 Convert Unreal Engine .sav files to JSON and vice versa. Written in JavaScript, runs entirely offline in your browser.
 
+## Use
+
+[Click here!](https://sts8.github.io/GVAS-JSON-Converter/dist/index.html)
+
+You can also download this repo and open dist/index.html in your browser.
+
 ## Tested Games
 
 - Deep Rock Galactic
