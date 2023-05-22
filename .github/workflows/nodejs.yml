@@ -1,0 +1,23 @@
+name: nodejs
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'test')"
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Use Node.js 18.x"
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build-dev
+      - run: npm run build-prod
+      - run: npm test
