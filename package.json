@@ -6,7 +6,8 @@
     "webpack-cli": "latest",
     "copy-webpack-plugin": "latest",
     "html-webpack-plugin": "latest",
-    "jest": "latest"
+    "jest": "latest",
+    "@types/jest": "latest"
   },
   "scripts": {
     "build-dev": "webpack --mode development --watch",
