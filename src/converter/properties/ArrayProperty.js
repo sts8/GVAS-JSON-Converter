@@ -58,6 +58,16 @@ class ArrayProperty {
 
                 break;
 
+            case "NameProperty":
+                const numberOfArrayElements = savReader.readUInt32();
+                this.value = [];
+
+                for (let i = 0; i < numberOfArrayElements; i++) {
+                    this.value.push(savReader.readString());
+                }
+
+                break;
+
             default:
                 this.value = savReader.readBytes(contentSize);
         }
@@ -121,6 +131,26 @@ class ArrayProperty {
                     ...ArrayProperty.padding,
                     ...writeString(this.genericType),
                     ...ArrayProperty.unknown,
+                    ...byteArrayContent
+                ]);
+
+            case "NameProperty":
+
+                contentSize = 4;
+
+                for (let i = 0; i < contentCount; i++) {
+                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(this.value[i])]);
+                    contentSize += 4 + this.value[i].length + 1;
+                }
+
+                return new Uint8Array([
+                    ...writeString(this.name),
+                    ...writeString(this.type),
+                    ...writeUint32(contentSize),
+                    ...ArrayProperty.padding,
+                    ...writeString(this.subtype),
+                    0x00, // --- contentSize content below ---
+                    ...writeUint32(contentCount),
                     ...byteArrayContent
                 ]);
 
