@@ -3,15 +3,15 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: {
-        index: "./src/main.js"
+        index: "./src/website/main.js"
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: "./src/index.html"
+            template: "./src/website/index.html"
         }),
         new CopyPlugin({
             patterns: [
-                {context: "./src/", from: "css/*"}
+                {context: "./src/website/", from: "css/*"}
             ]
         })
     ],

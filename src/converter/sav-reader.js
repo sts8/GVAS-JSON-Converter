@@ -1,19 +1,7 @@
 const {
-    HeaderProperty,
-    FileEndProperty,
-    NoneProperty,
-    BoolProperty,
-    IntProperty,
-    UInt32Property,
-    FloatProperty,
-    EnumProperty,
-    StructProperty,
-    ArrayProperty,
-    MulticastInlineDelegateProperty,
-    MapProperty,
-    SetProperty,
-    ObjectProperty,
-    StrProperty
+    HeaderProperty, NoneProperty, BoolProperty, IntProperty, UInt32Property, Int64Property, StrProperty,
+    EnumProperty, FloatProperty, StructProperty, ArrayProperty, MulticastInlineDelegateProperty, MapProperty,
+    SetProperty, ObjectProperty, FileEndProperty
 } = require("./properties");
 
 // https://stackoverflow.com/a/50868276
@@ -89,6 +77,8 @@ class SavReader {
                 return new IntProperty(name, this);
             case "UInt32Property":
                 return new UInt32Property(name, this);
+            case "Int64Property":
+                return new Int64Property(name, this);
             case "StrProperty":
                 return new StrProperty(name, this);
             case "EnumProperty":
@@ -107,6 +97,8 @@ class SavReader {
                 return new SetProperty(name, this);
             case "ObjectProperty":
                 return new ObjectProperty(name, this);
+            // case "ByteProperty":
+            //     return new ByteProperty(name, this);
             default:
                 throw new Error("Unknown property type: " + type);
         }
@@ -152,6 +144,12 @@ class SavReader {
         return int;
     }
 
+    readInt64() {
+        const int = Number(this.dataView.getBigInt64(this.offset, true));
+        this.offset += 8;
+        return int;
+    }
+
     readDateTime() {
         const ticksBigInt = this.dataView.getBigUint64(this.offset, true);
         this.offset += 8;
@@ -166,4 +164,4 @@ class SavReader {
 
 }
 
-module.exports = {SavReader};
+module.exports = SavReader;

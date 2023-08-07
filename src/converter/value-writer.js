@@ -19,6 +19,13 @@ function writeUint32(value) {
     return array;
 }
 
+function writeInt64(value) {
+    const array = new Uint8Array(8);
+    new DataView(array.buffer).setBigInt64(0, BigInt(value), true);
+
+    return array;
+}
+
 function writeFloat32(value) {
     const array = new Uint8Array(4);
     new DataView(array.buffer).setFloat32(0, value, true);
@@ -49,5 +56,5 @@ function writeBytes(hexString) {
 }
 
 module.exports = {
-    writeString, writeInt16, writeInt32, writeUint32, writeFloat32, writeDateTime, writeBytes
+    writeString, writeInt16, writeInt32, writeUint32, writeInt64, writeFloat32, writeDateTime, writeBytes
 };

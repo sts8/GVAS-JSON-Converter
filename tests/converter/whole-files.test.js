@@ -1,7 +1,7 @@
 const fs = require("fs");
-const {convertSavToJson, convertJsonToSav} = require("../src/converter");
+const {convertSavToJson, convertJsonToSav} = require("../../src/converter/converter");
 
-const path = "./tests/assets/whole-files/";
+const path = "./tests/converter/whole-files/";
 
 test.each(fs.readdirSync(path))("%s", (name) => {
 
