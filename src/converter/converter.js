@@ -5,6 +5,11 @@ const {
     SetProperty, ObjectProperty, ByteProperty, FileEndProperty
 } = require("./properties");
 
+// https://github.com/GoogleChromeLabs/jsbi/issues/30#issuecomment-1006088574
+BigInt.prototype["toJSON"] = function () {
+    return this.toString();
+};
+
 function convertSavToJson(savFileArrayBuffer) {
     const parsedContent = new SavReader(savFileArrayBuffer).readWholeBuffer();
     return JSON.stringify(parsedContent, null, 2);

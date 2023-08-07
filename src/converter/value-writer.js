@@ -21,7 +21,7 @@ function writeUint32(value) {
 
 function writeInt64(value) {
     const array = new Uint8Array(8);
-    new DataView(array.buffer).setBigInt64(0, BigInt(value), true);
+    new DataView(array.buffer).setBigInt64(0, value, true);
 
     return array;
 }
@@ -40,15 +40,17 @@ function writeString(string) {
     return new Uint8Array([...stringSize, ...stringArray, 0x00]);
 }
 
-function writeDateTime(dateTimeString) {
-    const date = new Date(dateTimeString);
-    const array = new Uint8Array(8);
-    const ticks = (BigInt(date.getTime()) * 10000n) + 621355968000000000n;
-
-    new DataView(array.buffer).setBigUint64(0, ticks, true);
-
-    return array;
-}
+// currently, JS does not support Date objects as precise as ticks
+//
+// function writeDateTime(dateTimeString) {
+//     const date = new Date(dateTimeString);
+//     const array = new Uint8Array(8);
+//     const ticks = (BigInt(date.getTime()) * 10000n) + 621355968000000000n;
+//
+//     new DataView(array.buffer).setBigInt64(0, ticks, true);
+//
+//     return array;
+// }
 
 // https://stackoverflow.com/a/50868276
 function writeBytes(hexString) {
@@ -56,5 +58,5 @@ function writeBytes(hexString) {
 }
 
 module.exports = {
-    writeString, writeInt16, writeInt32, writeUint32, writeInt64, writeFloat32, writeDateTime, writeBytes
+    writeString, writeInt16, writeInt32, writeUint32, writeInt64, writeFloat32, writeBytes
 };

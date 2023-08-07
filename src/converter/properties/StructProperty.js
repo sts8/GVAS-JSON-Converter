@@ -18,7 +18,7 @@ class StructProperty {
         }
 
         if (this.subtype === "DateTime") {
-            this.value = savReader.readDateTime();
+            this.value = savReader.readInt64();
             return this;
         }
 
@@ -30,7 +30,7 @@ class StructProperty {
     }
 
     toBytes() {
-        const {writeString, writeUint32, writeBytes, writeDateTime} = require("../value-writer");
+        const {writeString, writeUint32, writeInt64, writeBytes} = require("../value-writer");
         const {assignPrototype} = require("../converter");
 
         if (this.subtype === "Guid") {
@@ -53,7 +53,7 @@ class StructProperty {
                 ...StructProperty.padding,
                 ...writeString("DateTime"),
                 ...StructProperty.unknown,
-                ...writeDateTime(this.value)
+                ...writeInt64(this.value)
             ]);
         }
 

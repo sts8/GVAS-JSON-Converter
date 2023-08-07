@@ -56,6 +56,6 @@ test("Int64Property", () => {
     const someInt64Property = new SavReader(Int64PropertyBytes.buffer).readProperty();
     expect(someInt64Property).toBeInstanceOf(Int64Property);
     expect(someInt64Property.name).toBe("SessionTime");
-    expect(someInt64Property.value).toBe(189556562872);
+    expect(someInt64Property.value).toBe(189556562872n);
     expect(someInt64Property.toBytes()).toEqual(Int64PropertyBytes);
 });

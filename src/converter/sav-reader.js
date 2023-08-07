@@ -145,16 +145,19 @@ class SavReader {
     }
 
     readInt64() {
-        const int = Number(this.dataView.getBigInt64(this.offset, true));
+        const int = this.dataView.getBigInt64(this.offset, true);
         this.offset += 8;
         return int;
     }
 
-    readDateTime() {
-        const ticksBigInt = this.dataView.getBigUint64(this.offset, true);
-        this.offset += 8;
-        return new Date(Number(ticksBigInt / 10000n) + new Date("0001-01-01T00:00:00Z").getTime());
-    }
+    // currently, JS does not support Date objects as precise as ticks
+    //
+    // readDateTime() {
+    //     const ticksBigInt = this.dataView.getBigInt64(this.offset, true);
+    //     console.log(ticksBigInt);
+    //     this.offset += 8;
+    //     return new Date(Number(ticksBigInt / 10000n) + new Date("0001-01-01T00:00:00.000Z").getTime());
+    // }
 
     readBytes(numberOfBytes) {
         const bytes = arrayBufferToHexString(this.fileArrayBuffer.slice(this.offset, this.offset + numberOfBytes));
