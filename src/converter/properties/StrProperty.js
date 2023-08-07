@@ -1,22 +1,24 @@
+const {writeUint32} = require("../value-writer");
+
 class StrProperty {
-    static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
     type = "StrProperty";
 
     constructor(name, savReader) {
         this.name = name;
-        this.unknown = savReader.readBytes(1);
-        savReader.readBytes(StrProperty.padding.length);
+        savReader.readBytes(9); // content length (4) + padding (4) + content start marker (1)
         this.value = savReader.readString();
     }
 
     toBytes() {
-        const {writeString, writeBytes} = require("../value-writer");
+        const {writeString} = require("../value-writer");
+
+        const contentLength = this.value.length + 5; // string terminator (1) + value length (4)
 
         return new Uint8Array([
             ...writeString(this.name),
             ...writeString(this.type),
-            ...writeBytes(this.unknown),
-            ...StrProperty.padding,
+            ...writeUint32(contentLength),
+            0x00, 0x00, 0x00, 0x00, 0x00,
             ...writeString(this.value)
         ]);
     }
