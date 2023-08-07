@@ -13,6 +13,7 @@ const MulticastInlineDelegateProperty = require("./MulticastInlineDelegateProper
 const MapProperty = require("./MapProperty");
 const SetProperty = require("./SetProperty");
 const ObjectProperty = require("./ObjectProperty");
+const ByteProperty = require("./ByteProperty");
 const FileEndProperty = require("./FileEndProperty");
 
 module.exports = {
@@ -31,5 +32,6 @@ module.exports = {
     MapProperty,
     SetProperty,
     ObjectProperty,
+    ByteProperty,
     FileEndProperty
 };

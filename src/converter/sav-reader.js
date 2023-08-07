@@ -1,7 +1,7 @@
 const {
     HeaderProperty, NoneProperty, BoolProperty, IntProperty, UInt32Property, Int64Property, StrProperty,
     EnumProperty, FloatProperty, StructProperty, ArrayProperty, MulticastInlineDelegateProperty, MapProperty,
-    SetProperty, ObjectProperty, FileEndProperty
+    SetProperty, ObjectProperty, ByteProperty, FileEndProperty
 } = require("./properties");
 
 // https://stackoverflow.com/a/50868276
@@ -97,8 +97,8 @@ class SavReader {
                 return new SetProperty(name, this);
             case "ObjectProperty":
                 return new ObjectProperty(name, this);
-            // case "ByteProperty":
-            //     return new ByteProperty(name, this);
+            case "ByteProperty":
+                return new ByteProperty(name, this);
             default:
                 throw new Error("Unknown property type: " + type);
         }

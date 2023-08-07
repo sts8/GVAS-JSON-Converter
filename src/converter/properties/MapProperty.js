@@ -30,6 +30,10 @@ class MapProperty {
                     currentKey = savReader.readInt32();
                     break;
 
+                case "StrProperty":
+                    currentKey = savReader.readString();
+                    break;
+
                 default:
                     throw new Error("Key Type not implemented: " + this.keyType);
             }
@@ -56,6 +60,10 @@ class MapProperty {
 
                 case "BoolProperty":
                     currentValue = savReader.readBoolean();
+                    break;
+
+                case "StrProperty":
+                    currentValue = savReader.readString();
                     break;
 
                 default:
@@ -88,6 +96,10 @@ class MapProperty {
                     byteArrayContent = new Uint8Array([...byteArrayContent, ...writeInt32(currentKey)]);
                     break;
 
+                case "StrProperty":
+                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(currentKey)]);
+                    break;
+
                 default:
                     throw new Error("Key Type not implemented: " + this.keyType);
             }
@@ -107,6 +119,10 @@ class MapProperty {
 
                 case "FloatProperty":
                     byteArrayContent = new Uint8Array([...byteArrayContent, ...writeFloat32(currentValue)]);
+                    break;
+
+                case "StrProperty":
+                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(currentValue)]);
                     break;
 
                 case "BoolProperty":

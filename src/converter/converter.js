@@ -2,7 +2,7 @@ const SavReader = require("./sav-reader");
 const {
     HeaderProperty, NoneProperty, BoolProperty, IntProperty, UInt32Property, Int64Property, StrProperty,
     EnumProperty, FloatProperty, StructProperty, ArrayProperty, MulticastInlineDelegateProperty, MapProperty,
-    SetProperty, ObjectProperty, FileEndProperty
+    SetProperty, ObjectProperty, ByteProperty, FileEndProperty
 } = require("./properties");
 
 function convertSavToJson(savFileArrayBuffer) {
@@ -53,6 +53,8 @@ function assignPrototype(rawProperty) {
             return Object.setPrototypeOf(rawProperty, SetProperty.prototype);
         case "ObjectProperty":
             return Object.setPrototypeOf(rawProperty, ObjectProperty.prototype);
+        case "ByteProperty":
+            return Object.setPrototypeOf(rawProperty, ByteProperty.prototype);
         case "FileEndProperty":
             return Object.setPrototypeOf(rawProperty, FileEndProperty.prototype);
         default:
