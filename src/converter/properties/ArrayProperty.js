@@ -2,7 +2,6 @@ const NoneProperty = require("./NoneProperty");
 
 class ArrayProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    static unknown = new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
     type = "ArrayProperty";
 
     constructor(name, savReader) {
@@ -27,8 +26,8 @@ class ArrayProperty {
 
                 this.genericType = savReader.readString();
 
-                const unknown = savReader.readBytes(17);
-                if (unknown !== "0000000000000000000000000000000000") throw new Error();
+                this.guid = savReader.readBytes(16);
+                savReader.readBytes(1);
 
                 this.value = [];
 
@@ -114,7 +113,7 @@ class ArrayProperty {
                     + 4
                     + ArrayProperty.padding.length
                     + 4 + this.genericType.length + 1
-                    + ArrayProperty.unknown.length
+                    + 16 + 1 // guid
                     + byteArrayContent.length;
 
                 return new Uint8Array([
@@ -130,7 +129,7 @@ class ArrayProperty {
                     ...writeUint32(byteArrayContent.length),
                     ...ArrayProperty.padding,
                     ...writeString(this.genericType),
-                    ...ArrayProperty.unknown,
+                    ...writeBytes(this.guid + "00"),
                     ...byteArrayContent
                 ]);
 

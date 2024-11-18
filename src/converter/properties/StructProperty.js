@@ -1,6 +1,5 @@
 class StructProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    static unknown = new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
     type = "StructProperty";
 
     constructor(name, savReader) {
@@ -8,7 +7,9 @@ class StructProperty {
         const contentSize = savReader.readUInt32();
         savReader.readBytes(4); // padding
         this.subtype = savReader.readString();
-        savReader.readBytes(17); // unknown
+
+        this.guid = savReader.readBytes(16);
+        savReader.readBytes(1);
 
         const contentEndPosition = savReader.offset + contentSize;
 
@@ -40,7 +41,7 @@ class StructProperty {
                 ...writeUint32(16),
                 ...StructProperty.padding,
                 ...writeString("Guid"),
-                ...StructProperty.unknown,
+                ...writeBytes(this.guid + "00"),
                 ...writeBytes(this.value)
             ]);
         }
@@ -52,7 +53,7 @@ class StructProperty {
                 ...writeUint32(8),
                 ...StructProperty.padding,
                 ...writeString("DateTime"),
-                ...StructProperty.unknown,
+                ...writeBytes(this.guid + "00"),
                 ...writeInt64(this.value)
             ]);
         }
@@ -80,7 +81,7 @@ class StructProperty {
             ...writeUint32(contentBytes.length),
             ...StructProperty.padding,
             ...writeString(this.subtype),
-            ...StructProperty.unknown,
+            ...writeBytes(this.guid + "00"),
             ...contentBytes
         ]);
     }
