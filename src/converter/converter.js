@@ -2,7 +2,7 @@ const SavReader = require("./sav-reader");
 const {
     HeaderProperty, NoneProperty, BoolProperty, IntProperty, UInt32Property, Int64Property, StrProperty,
     EnumProperty, FloatProperty, StructProperty, ArrayProperty, MulticastInlineDelegateProperty, MapProperty,
-    SetProperty, ObjectProperty, ByteProperty, FileEndProperty
+    SetProperty, ObjectProperty, ByteProperty, FileEndProperty, NameProperty
 } = require("./properties");
 
 // https://github.com/GoogleChromeLabs/jsbi/issues/30#issuecomment-1006088574
@@ -42,6 +42,8 @@ function assignPrototype(rawProperty) {
             return Object.setPrototypeOf(rawProperty, Int64Property.prototype);
         case "StrProperty":
             return Object.setPrototypeOf(rawProperty, StrProperty.prototype);
+        case "NameProperty":
+            return Object.setPrototypeOf(rawProperty, NameProperty.prototype);
         case "EnumProperty":
             return Object.setPrototypeOf(rawProperty, EnumProperty.prototype);
         case "FloatProperty":

@@ -1,7 +1,7 @@
 const {
     HeaderProperty, NoneProperty, BoolProperty, IntProperty, UInt32Property, Int64Property, StrProperty,
     EnumProperty, FloatProperty, StructProperty, ArrayProperty, MulticastInlineDelegateProperty, MapProperty,
-    SetProperty, ObjectProperty, ByteProperty, FileEndProperty
+    SetProperty, ObjectProperty, ByteProperty, FileEndProperty, NameProperty
 } = require("./properties");
 
 // https://stackoverflow.com/a/50868276
@@ -81,6 +81,8 @@ class SavReader {
                 return new Int64Property(name, this);
             case "StrProperty":
                 return new StrProperty(name, this);
+            case "NameProperty":
+                return new NameProperty(name, this);
             case "EnumProperty":
                 return new EnumProperty(name, this);
             case "FloatProperty":
