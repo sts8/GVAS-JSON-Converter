@@ -12,13 +12,17 @@ class StrProperty {
     toBytes() {
         const {writeString} = require("../value-writer");
 
-        const contentLength = this.value.length + 5; // string terminator (1) + value length (4)
+        let contentLength = 4 + this.value.length; // value length (4)
+        if (this.value.length > 0) {
+            contentLength++; // string terminator (1)
+        }
 
         return new Uint8Array([
             ...writeString(this.name),
             ...writeString(this.type),
             ...writeUint32(contentLength),
-            0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, // padding (4)
+            0x00, // content start marker (1)
             ...writeString(this.value)
         ]);
     }

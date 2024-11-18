@@ -34,6 +34,13 @@ function writeFloat32(value) {
 }
 
 function writeString(string) {
+
+    if (string === "") {
+        const array = new Uint8Array(4);
+        new DataView(array.buffer).setUint32(0, 0, true);
+        return array;
+    }
+
     const stringSize = writeUint32(string.length + 1);
     const stringArray = new TextEncoder().encode(string);
 
