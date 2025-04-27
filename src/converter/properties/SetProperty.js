@@ -5,13 +5,13 @@ class SetProperty {
     constructor(name, savReader) {
         this.name = name;
         const contentSize = savReader.readUInt32();
-        savReader.readBytes(4); // padding
+        savReader.skipBytes(4); // padding
         this.subtype = savReader.readString();
-        savReader.readBytes(1);
+        savReader.skipBytes(1);
 
         if (this.subtype === "StructProperty") {
 
-            savReader.readBytes(4); // padding
+            savReader.skipBytes(4); // padding
 
             const contentCount = savReader.readUInt32();
             this.value = [];

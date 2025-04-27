@@ -5,11 +5,11 @@ class StructProperty {
     constructor(name, savReader) {
         this.name = name;
         const contentSize = savReader.readUInt32();
-        savReader.readBytes(4); // padding
+        savReader.skipBytes(4); // padding
         this.subtype = savReader.readString();
 
         this.guid = savReader.readBytes(16);
-        savReader.readBytes(1);
+        savReader.skipBytes(1);
 
         const contentEndPosition = savReader.offset + contentSize;
 

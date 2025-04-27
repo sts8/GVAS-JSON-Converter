@@ -6,9 +6,9 @@ class EnumProperty {
         this.name = name;
         this.type = "EnumProperty";
         savReader.readUInt32(); // contentSize
-        savReader.readBytes(EnumProperty.padding.length);
+        savReader.skipBytes(EnumProperty.padding.length);
         this.enum = savReader.readString();
-        savReader.readBytes(1);
+        savReader.skipBytes(1);
         this.value = savReader.readString();
     }
 

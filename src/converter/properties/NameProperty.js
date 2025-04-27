@@ -6,7 +6,7 @@ class NameProperty {
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.readBytes(9); // content length (4) + padding (4) + content start marker (1)
+        savReader.skipBytes(9); // content length (4) + padding (4) + content start marker (1)
         this.value = savReader.readString();
     }
 

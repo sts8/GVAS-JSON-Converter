@@ -7,7 +7,7 @@ class FloatProperty {
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.readBytes(FloatProperty.padding.length);
+        savReader.skipBytes(FloatProperty.padding.length);
         this.value = savReader.readFloat32();
     }
 

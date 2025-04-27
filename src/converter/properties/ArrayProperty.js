@@ -7,9 +7,9 @@ class ArrayProperty {
     constructor(name, savReader) {
         this.name = name;
         const contentSize = savReader.readUInt32();
-        savReader.readBytes(4); // padding
+        savReader.skipBytes(4); // padding
         this.subtype = savReader.readString();
-        savReader.readBytes(1);
+        savReader.skipBytes(1);
 
         switch (this.subtype) {
             case "StructProperty":
@@ -22,12 +22,12 @@ class ArrayProperty {
                 if (subtypeAgain !== this.subtype) throw new Error();
 
                 savReader.readUInt32(); // arraySize
-                savReader.readBytes(4); // padding
+                savReader.skipBytes(4); // padding
 
                 this.genericType = savReader.readString();
 
                 this.guid = savReader.readBytes(16);
-                savReader.readBytes(1);
+                savReader.skipBytes(1);
 
                 this.value = [];
 

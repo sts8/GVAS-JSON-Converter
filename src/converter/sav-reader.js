@@ -24,13 +24,13 @@ class SavReader {
         // this.logProgress();
 
         const headerProperty = this.readHeader();
-        console.log(JSON.stringify(headerProperty, null, 2));
+        // console.log(JSON.stringify(headerProperty, null, 2));
         output.push(headerProperty);
         // this.logProgress();
 
         while (!this.hasFinished()) {
             const nextProperty = this.readProperty();
-            console.log(JSON.stringify(nextProperty, null, 2));
+            // console.log(JSON.stringify(nextProperty, null, 2));
             output.push(nextProperty);
             // this.logProgress();
         }
@@ -165,6 +165,10 @@ class SavReader {
         const bytes = arrayBufferToHexString(this.fileArrayBuffer.slice(this.offset, this.offset + numberOfBytes));
         this.offset += numberOfBytes;
         return bytes;
+    }
+
+    skipBytes(numberOfBytes) {
+        this.offset += numberOfBytes;
     }
 
 }

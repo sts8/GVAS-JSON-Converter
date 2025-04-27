@@ -6,10 +6,10 @@ class ByteProperty {
     constructor(name, savReader) {
         this.name = name;
         const contentLength = savReader.readUInt32();
-        savReader.readBytes(4);
+        savReader.skipBytes(4);
 
         this.subtype = savReader.readString();
-        savReader.readBytes(1);
+        savReader.skipBytes(1);
         this.value = savReader.readBytes(contentLength);
     }
 

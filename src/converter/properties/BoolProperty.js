@@ -4,9 +4,9 @@ class BoolProperty {
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.readBytes(BoolProperty.padding.length);
+        savReader.skipBytes(BoolProperty.padding.length);
         this.value = savReader.readBoolean();
-        savReader.readBytes(1);
+        savReader.skipBytes(1);
     }
 
     toBytes() {

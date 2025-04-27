@@ -6,7 +6,7 @@ class UInt32Property {
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.readBytes(UInt32Property.padding.length);
+        savReader.skipBytes(UInt32Property.padding.length);
         this.value = savReader.readUInt32();
     }
 

@@ -3,7 +3,7 @@ class HeaderProperty {
     type = "HeaderProperty";
 
     constructor(savReader) {
-        savReader.readBytes(HeaderProperty.GVAS.length);
+        savReader.skipBytes(HeaderProperty.GVAS.length);
         this.saveGameVersion = savReader.readInt32();
         this.packageVersion = savReader.readInt32();
 

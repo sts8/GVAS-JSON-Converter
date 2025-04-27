@@ -7,13 +7,13 @@ class MapProperty {
     constructor(name, savReader) {
         this.name = name;
         savReader.readUInt32(); // contentSize
-        savReader.readBytes(4); // padding
+        savReader.skipBytes(4); // padding
         this.keyType = savReader.readString();
         this.valueType = savReader.readString();
-        savReader.readBytes(1);
+        savReader.skipBytes(1);
 
         const tempMap = new Map();
-        savReader.readBytes(4); // padding
+        savReader.skipBytes(4); // padding
         const contentCount = savReader.readUInt32();
 
         for (let i = 0; i < contentCount; i++) {

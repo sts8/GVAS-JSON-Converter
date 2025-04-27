@@ -6,7 +6,7 @@ class Int64Property {
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.readBytes(Int64Property.padding.length);
+        savReader.skipBytes(Int64Property.padding.length);
         this.value = savReader.readInt64();
     }
 

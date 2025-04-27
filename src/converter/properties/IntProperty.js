@@ -6,7 +6,7 @@ class IntProperty {
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.readBytes(IntProperty.padding.length);
+        savReader.skipBytes(IntProperty.padding.length);
         this.value = savReader.readInt32();
     }
 

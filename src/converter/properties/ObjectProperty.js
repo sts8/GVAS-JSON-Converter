@@ -5,7 +5,7 @@ class ObjectProperty {
     constructor(name, savReader) {
         this.name = name;
         savReader.readUInt32(); // contentSize
-        savReader.readBytes(5); // padding
+        savReader.skipBytes(5); // padding
         this.value = savReader.readString();
     }
 
