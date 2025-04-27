@@ -3,13 +3,14 @@
   "description": "Convert Unreal Engine .sav files to JSON and vice versa.",
   "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^29.5.14",
-    "copy-webpack-plugin": "^13.0.0",
-    "html-webpack-plugin": "^5.6.3",
-    "jest": "^29.7.0",
-    "webpack": "^5.99.7",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.1"
+    "@types/jest": "latest",
+    "benchmark": "latest",
+    "copy-webpack-plugin": "latest",
+    "html-webpack-plugin": "latest",
+    "jest": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "webpack-dev-server": "latest"
   },
   "scripts": {
     "start": "webpack-dev-server --mode development",
