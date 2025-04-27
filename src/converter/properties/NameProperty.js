@@ -1,5 +1,3 @@
-const {writeUint32} = require("../value-writer");
-
 // copied StrProperty
 class NameProperty {
     type = "NameProperty";
@@ -11,17 +9,45 @@ class NameProperty {
     }
 
     toBytes() {
-        const {writeString} = require("../value-writer");
+        const {writeString, writeUint32} = require("../value-writer");
 
-        const contentLength = this.value.length + 5; // string terminator (1) + value length (4)
+        const nameBytes = writeString(this.name);
+        const typeBytes = writeString(this.type);
+        const valueBytes = writeString(this.value);
+        const contentLengthBytes = writeUint32(valueBytes.length);
 
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...writeUint32(contentLength),
-            0x00, 0x00, 0x00, 0x00, 0x00,
-            ...writeString(this.value)
-        ]);
+        const padding = new Uint8Array(4); // 0x00, 0x00, 0x00, 0x00
+        const contentStartMarker = new Uint8Array([0x00]);
+
+        const totalLength =
+            nameBytes.length +
+            typeBytes.length +
+            contentLengthBytes.length +
+            padding.length +
+            contentStartMarker.length +
+            valueBytes.length;
+
+        const result = new Uint8Array(totalLength);
+        let offset = 0;
+
+        result.set(nameBytes, offset);
+        offset += nameBytes.length;
+
+        result.set(typeBytes, offset);
+        offset += typeBytes.length;
+
+        result.set(contentLengthBytes, offset);
+        offset += contentLengthBytes.length;
+
+        result.set(padding, offset);
+        offset += padding.length;
+
+        result.set(contentStartMarker, offset);
+        offset += contentStartMarker.length;
+
+        result.set(valueBytes, offset);
+
+        return result;
     }
 }
 

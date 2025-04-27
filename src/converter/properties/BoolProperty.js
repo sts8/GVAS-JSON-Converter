@@ -12,19 +12,28 @@ class BoolProperty {
     toBytes() {
         const {writeString} = require("../value-writer");
 
-        let result = new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...BoolProperty.padding
-        ]);
+        const nameBytes = writeString(this.name);
+        const typeBytes = writeString(this.type);
+        const padding = BoolProperty.padding;
+        const boolByte = this.value ? 0x01 : 0x00;
 
-        if (this.value === true) {
-            result = new Uint8Array([...result, 0x01]);
-        } else {
-            result = new Uint8Array([...result, 0x00]);
-        }
+        const totalLength = nameBytes.length + typeBytes.length + padding.length + 2;
+        const result = new Uint8Array(totalLength);
 
-        return new Uint8Array([...result, 0x00]);
+        let offset = 0;
+        result.set(nameBytes, offset);
+        offset += nameBytes.length;
+
+        result.set(typeBytes, offset);
+        offset += typeBytes.length;
+
+        result.set(padding, offset);
+        offset += padding.length;
+
+        result[offset++] = boolByte;
+        result[offset++] = 0x00;
+
+        return result;
     }
 }
 

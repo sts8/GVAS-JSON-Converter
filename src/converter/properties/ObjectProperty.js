@@ -12,15 +12,37 @@ class ObjectProperty {
     toBytes() {
         const {writeString, writeUint32} = require("../value-writer");
 
-        const contentSize = 4 + this.value.length + 1;
+        const nameBytes = writeString(this.name);
+        const typeBytes = writeString(this.type);
+        const contentSizeBytes = writeUint32(4 + this.value.length + 1);
+        const paddingBytes = ObjectProperty.padding;
+        const valueBytes = writeString(this.value);
 
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...writeUint32(contentSize),
-            ...ObjectProperty.padding,
-            ...writeString(this.value)
-        ]);
+        const totalLength =
+            nameBytes.length +
+            typeBytes.length +
+            contentSizeBytes.length +
+            paddingBytes.length +
+            valueBytes.length;
+
+        const output = new Uint8Array(totalLength);
+
+        let offset = 0;
+        output.set(nameBytes, offset);
+        offset += nameBytes.length;
+
+        output.set(typeBytes, offset);
+        offset += typeBytes.length;
+
+        output.set(contentSizeBytes, offset);
+        offset += contentSizeBytes.length;
+
+        output.set(paddingBytes, offset);
+        offset += paddingBytes.length;
+
+        output.set(valueBytes, offset);
+
+        return output;
     }
 }
 

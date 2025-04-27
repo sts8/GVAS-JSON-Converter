@@ -14,15 +14,44 @@ class ByteProperty {
     }
 
     toBytes() {
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...writeUint32(this.value.length / 2),
-            0x00, 0x00, 0x00, 0x00,
-            ...writeString(this.subtype),
-            0x00,
-            ...writeBytes(this.value)
-        ]);
+        const nameBytes = writeString(this.name);
+        const typeBytes = writeString(this.type);
+        const lengthBytes = writeUint32(this.value.length / 2);
+        const subtypeBytes = writeString(this.subtype);
+        const valueBytes = writeBytes(this.value);
+
+        const totalLength =
+            nameBytes.length +
+            typeBytes.length +
+            lengthBytes.length +
+            4 + // four zero bytes
+            subtypeBytes.length +
+            1 + // single zero byte
+            valueBytes.length;
+
+        const output = new Uint8Array(totalLength);
+
+        let offset = 0;
+        output.set(nameBytes, offset);
+        offset += nameBytes.length;
+
+        output.set(typeBytes, offset);
+        offset += typeBytes.length;
+
+        output.set(lengthBytes, offset);
+        offset += lengthBytes.length;
+
+        output.set([0x00, 0x00, 0x00, 0x00], offset);
+        offset += 4;
+
+        output.set(subtypeBytes, offset);
+        offset += subtypeBytes.length;
+
+        output[offset++] = 0x00;
+
+        output.set(valueBytes, offset);
+
+        return output;
     }
 }
 

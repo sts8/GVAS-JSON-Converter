@@ -14,12 +14,32 @@ class FloatProperty {
     toBytes() {
         const {writeString, writeFloat32} = require("../value-writer");
 
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...FloatProperty.padding,
-            ...writeFloat32(this.value)
-        ]);
+        const nameBytes = writeString(this.name);
+        const typeBytes = writeString(this.type);
+        const paddingBytes = FloatProperty.padding;
+        const valueBytes = writeFloat32(this.value);
+
+        const totalLength =
+            nameBytes.length +
+            typeBytes.length +
+            paddingBytes.length +
+            valueBytes.length;
+
+        const output = new Uint8Array(totalLength);
+
+        let offset = 0;
+        output.set(nameBytes, offset);
+        offset += nameBytes.length;
+
+        output.set(typeBytes, offset);
+        offset += typeBytes.length;
+
+        output.set(paddingBytes, offset);
+        offset += paddingBytes.length;
+
+        output.set(valueBytes, offset);
+
+        return output;
     }
 }
 

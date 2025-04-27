@@ -13,12 +13,27 @@ class IntProperty {
     toBytes() {
         const {writeString, writeInt32} = require("../value-writer");
 
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...IntProperty.padding,
-            ...writeInt32(this.value)
-        ]);
+        const nameBytes = writeString(this.name);
+        const typeBytes = writeString(this.type);
+        const valueBytes = writeInt32(this.value);
+        const padding = IntProperty.padding;
+
+        const totalLength = nameBytes.length + typeBytes.length + padding.length + valueBytes.length;
+        const result = new Uint8Array(totalLength);
+
+        let offset = 0;
+        result.set(nameBytes, offset);
+        offset += nameBytes.length;
+
+        result.set(typeBytes, offset);
+        offset += typeBytes.length;
+
+        result.set(padding, offset);
+        offset += padding.length;
+
+        result.set(valueBytes, offset);
+
+        return result;
     }
 }
 

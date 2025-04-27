@@ -24,10 +24,20 @@ function convertSavToJson(savFileArrayBuffer) {
 }
 
 function convertJsonToSav(jsonString) {
-    let output = new Uint8Array(0);
+    const rawProperties = JSON.parse(jsonString);
 
-    for (const property of JSON.parse(jsonString)) {
-        output = new Uint8Array([...output, ...assignPrototype(property).toBytes()]);
+    const byteArrays = rawProperties.map(rawProperty => {
+        const typedProperty = assignPrototype(rawProperty);
+        return typedProperty.toBytes();
+    });
+
+    const totalLength = byteArrays.reduce((sum, arr) => sum + arr.length, 0);
+    const output = new Uint8Array(totalLength);
+
+    let offset = 0;
+    for (const bytes of byteArrays) {
+        output.set(bytes, offset);
+        offset += bytes.length;
     }
 
     return output;
