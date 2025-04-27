@@ -65,13 +65,11 @@ class StructProperty {
             if (Array.isArray(this.value[i])) {
 
                 for (let j = 0; j < this.value[i].length; j++) {
-                    assignPrototype(this.value[i][j]);
-                    contentBytes = new Uint8Array([...contentBytes, ...this.value[i][j].toBytes()]);
+                    contentBytes = new Uint8Array([...contentBytes, ...assignPrototype(this.value[i][j]).toBytes()]);
                 }
 
             } else {
-                assignPrototype(this.value[i]);
-                contentBytes = new Uint8Array([...contentBytes, ...this.value[i].toBytes()]);
+                contentBytes = new Uint8Array([...contentBytes, ...assignPrototype(this.value[i]).toBytes()]);
             }
         }
 

@@ -96,12 +96,10 @@ class ArrayProperty {
 
                             if (Array.isArray(this.value[i])) {
                                 for (let j = 0; j < this.value[i].length; j++) {
-                                    assignPrototype(this.value[i][j]);
-                                    byteArrayContent = new Uint8Array([...byteArrayContent, ...this.value[i][j].toBytes()]);
+                                    byteArrayContent = new Uint8Array([...byteArrayContent, ...assignPrototype(this.value[i][j]).toBytes()]);
                                 }
                             } else {
-                                assignPrototype(this.value[i]);
-                                byteArrayContent = new Uint8Array([...byteArrayContent, ...this.value[i].toBytes()]);
+                                byteArrayContent = new Uint8Array([...byteArrayContent, ...assignPrototype(this.value[i]).toBytes()]);
                             }
                         }
                 }

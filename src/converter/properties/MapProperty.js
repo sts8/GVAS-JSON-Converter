@@ -108,8 +108,7 @@ class MapProperty {
 
                 case "StructProperty":
                     for (let i = 0; i < currentValue.length; i++) {
-                        assignPrototype(currentValue[i]);
-                        byteArrayContent = new Uint8Array([...byteArrayContent, ...currentValue[i].toBytes()]);
+                        byteArrayContent = new Uint8Array([...byteArrayContent, ...assignPrototype(currentValue[i]).toBytes()]);
                     }
                     break;
 
