@@ -1,27 +1,24 @@
 class Int64Property {
-    static padding = new Uint8Array([
-        0x08, // size of value?
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-    type = "Int64Property";
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.skipBytes(Int64Property.padding.length);
+        this.type = "Int64Property";
+        this.unknown = savReader.readBytes(25);
         this.value = savReader.readInt64();
     }
 
     toBytes() {
-        const {writeString, writeInt64} = require("../value-writer");
+        const {writeString, writeBytes, writeInt64} = require("../value-writer");
 
         const nameBytes = writeString(this.name);
         const typeBytes = writeString(this.type);
-        const paddingBytes = Int64Property.padding;
+        const unknownBytes = writeBytes(this.unknown);
         const valueBytes = writeInt64(this.value);
 
         const totalLength =
             nameBytes.length +
             typeBytes.length +
-            paddingBytes.length +
+            unknownBytes.length +
             valueBytes.length;
 
         const output = new Uint8Array(totalLength);
@@ -33,8 +30,8 @@ class Int64Property {
         output.set(typeBytes, offset);
         offset += typeBytes.length;
 
-        output.set(paddingBytes, offset);
-        offset += paddingBytes.length;
+        output.set(unknownBytes, offset);
+        offset += unknownBytes.length;
 
         output.set(valueBytes, offset);
 
