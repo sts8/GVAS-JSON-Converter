@@ -33,6 +33,7 @@ class SavReader {
             // console.log(JSON.stringify(nextProperty, null, 2));
             output.push(nextProperty);
             // this.logProgress();
+            // console.log("next: ", this.offset);
         }
 
         return output;
@@ -113,6 +114,7 @@ class SavReader {
         const string = new TextDecoder().decode(this.fileArrayBuffer.slice(this.offset, this.offset + size - 1));
         this.offset += size;
 
+        // console.log("read string: ", string);
         return string;
     }
 
@@ -125,6 +127,12 @@ class SavReader {
     readFloat32() {
         const float = this.dataView.getFloat32(this.offset, true);
         this.offset += 4;
+        return float;
+    }
+
+    readFloat64() {
+        const float = this.dataView.getFloat64(this.offset, true);
+        this.offset += 8;
         return float;
     }
 

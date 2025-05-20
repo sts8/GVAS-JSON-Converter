@@ -33,6 +33,13 @@ function writeFloat32(value) {
     return array;
 }
 
+function writeFloat64(value) {
+    const array = new Uint8Array(8);
+    new DataView(array.buffer).setFloat64(0, value, true);
+
+    return array;
+}
+
 function writeString(string) {
 
     if (string === "") {
@@ -65,5 +72,5 @@ function writeBytes(hexString) {
 }
 
 module.exports = {
-    writeString, writeInt16, writeInt32, writeUint32, writeInt64, writeFloat32, writeBytes
+    writeString, writeInt16, writeInt32, writeUint32, writeInt64, writeFloat32, writeFloat64, writeBytes
 };

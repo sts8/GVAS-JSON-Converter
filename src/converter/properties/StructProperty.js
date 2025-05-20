@@ -23,6 +23,11 @@ class StructProperty {
             return this;
         }
 
+        if (this.subtype === "Vector2D") {
+            this.value = "(" + savReader.readFloat64() + "/" + savReader.readFloat64() + ")";
+            return this;
+        }
+
         this.value = [];
 
         while (savReader.offset < contentEndPosition) {
@@ -31,7 +36,7 @@ class StructProperty {
     }
 
     toBytes() {
-        const {writeString, writeUint32, writeInt64, writeBytes} = require("../value-writer");
+        const {writeString, writeUint32, writeInt64, writeFloat64, writeBytes} = require("../value-writer");
         const {assignPrototype} = require("../converter");
 
         if (this.subtype === "Guid") {
@@ -55,6 +60,23 @@ class StructProperty {
                 ...writeString("DateTime"),
                 ...writeBytes(this.guid + "00"),
                 ...writeInt64(this.value)
+            ]);
+        }
+
+        if (this.subtype === "Vector2D") {
+            const vector = this.value.slice(1, -1).split("/");
+            const x = vector[0];
+            const y = vector[1];
+
+            return new Uint8Array([
+                ...writeString(this.name),
+                ...writeString(this.type),
+                ...writeUint32(16),
+                ...StructProperty.padding,
+                ...writeString("Vector2D"),
+                ...writeBytes(this.guid + "00"),
+                ...writeFloat64(x),
+                ...writeFloat64(y)
             ]);
         }
 

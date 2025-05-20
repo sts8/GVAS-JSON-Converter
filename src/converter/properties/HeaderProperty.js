@@ -7,6 +7,10 @@ class HeaderProperty {
         this.saveGameVersion = savReader.readInt32();
         this.packageVersion = savReader.readInt32();
 
+        if (this.saveGameVersion >= 3) {
+            this.ue5 = savReader.readInt32();
+        }
+
         this.engineVersion = savReader.readInt16() + "." + savReader.readInt16() + "." + savReader.readInt16();
         this.engineBuild = savReader.readUInt32();
         this.engineBranch = savReader.readString();
@@ -30,6 +34,7 @@ class HeaderProperty {
             ...HeaderProperty.GVAS,
             ...writeInt32(this.saveGameVersion),
             ...writeInt32(this.packageVersion),
+            ...(typeof this.ue5 !== 'undefined' ? writeInt32(this.ue5) : []),
             ...writeInt16(this.engineVersion.split(".")[0]),
             ...writeInt16(this.engineVersion.split(".")[1]),
             ...writeInt16(this.engineVersion.split(".")[2]),
