@@ -16,6 +16,7 @@ class SavReader {
         this.fileArrayBuffer = fileArrayBuffer;
         this.fileSize = fileArrayBuffer.byteLength;
         this.dataView = new DataView(fileArrayBuffer);
+        this.propertyHistogram = {};
     }
 
     readWholeBuffer() {
@@ -35,6 +36,14 @@ class SavReader {
             // this.logProgress();
             // console.log("next: ", this.offset);
         }
+
+        const sortedHistogram = Object.entries(this.propertyHistogram)
+            .sort((a, b) => b[1] - a[1])
+            .reduce((acc, [key, val]) => {
+                acc[key] = val;
+                return acc;
+            }, {});
+        console.table(sortedHistogram);
 
         return output;
     }
@@ -58,18 +67,20 @@ class SavReader {
 
             if (assumedFileEnd.every((value, index) => value === FileEndProperty.bytes[index])) {
                 this.offset += FileEndProperty.bytes.length;
+                this._incrementHistogram("FileEndProperty");
                 return new FileEndProperty();
             }
         }
 
         const name = this.readString();
 
-        switch (name) {
-            case "None":
-                return new NoneProperty();
+        if (name === "None") {
+            this._incrementHistogram("NoneProperty");
+            return new NoneProperty();
         }
 
         const type = this.readString();
+        this._incrementHistogram(type);
 
         switch (type) {
             case "BoolProperty":
@@ -104,6 +115,14 @@ class SavReader {
                 return new ByteProperty(name, this);
             default:
                 throw new Error("Unknown property type: " + type);
+        }
+    }
+
+    _incrementHistogram(type) {
+        if (!this.propertyHistogram[type]) {
+            this.propertyHistogram[type] = 1;
+        } else {
+            this.propertyHistogram[type]++;
         }
     }
 
