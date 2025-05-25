@@ -1,57 +1,49 @@
-const {writeString, writeBytes, writeUint32} = require("../value-writer");
+const {getStringByteSize} = require("../sav-writer");
 
 class ByteProperty {
-    type = "ByteProperty";
+    static SIZE_ONE = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        const contentLength = savReader.readUInt32();
-        savReader.skipBytes(4);
+        this.type = "ByteProperty";
+        savReader.skipBytes(8); // contains UNKNOWN
 
         this.subtype = savReader.readString();
-        savReader.skipBytes(1);
-        this.value = savReader.readBytes(contentLength);
+
+        this.hasGuid = savReader.readBoolean();
+        if (this.hasGuid) {
+            this.guid = savReader.readGuid();
+        }
+
+        this.value = savReader.readByte();
     }
 
+    getByteSize() {
+        return getStringByteSize(this.name) +
+            getStringByteSize(this.subtype) + 27 +
+            (this.hasGuid ? 16 : 0);
+    }
+
+    write(savWriter) {
+        savWriter.writeString(this.name);
+        savWriter.writeString(this.type);
+        savWriter.writeArray(ByteProperty.SIZE_ONE);
+        savWriter.writeString(this.subtype);
+
+        savWriter.writeBoolean(this.hasGuid);
+        if (this.hasGuid) {
+            savWriter.writeGuid(this.guid);
+        }
+
+        savWriter.writeByte(this.value);
+    }
+
+    // backwards compatibility
     toBytes() {
-        const nameBytes = writeString(this.name);
-        const typeBytes = writeString(this.type);
-        const lengthBytes = writeUint32(this.value.length / 2);
-        const subtypeBytes = writeString(this.subtype);
-        const valueBytes = writeBytes(this.value);
-
-        const totalLength =
-            nameBytes.length +
-            typeBytes.length +
-            lengthBytes.length +
-            4 + // four zero bytes
-            subtypeBytes.length +
-            1 + // single zero byte
-            valueBytes.length;
-
-        const output = new Uint8Array(totalLength);
-
-        let offset = 0;
-        output.set(nameBytes, offset);
-        offset += nameBytes.length;
-
-        output.set(typeBytes, offset);
-        offset += typeBytes.length;
-
-        output.set(lengthBytes, offset);
-        offset += lengthBytes.length;
-
-        output.set([0x00, 0x00, 0x00, 0x00], offset);
-        offset += 4;
-
-        output.set(subtypeBytes, offset);
-        offset += subtypeBytes.length;
-
-        output[offset++] = 0x00;
-
-        output.set(valueBytes, offset);
-
-        return output;
+        const SavWriter = require("../sav-writer");
+        const savWriter = new SavWriter(this.getByteSize());
+        this.write(savWriter);
+        return savWriter.array;
     }
 }
 

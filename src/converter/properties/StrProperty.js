@@ -1,52 +1,46 @@
+const {getStringByteSize} = require("../sav-writer");
+
 class StrProperty {
-    type = "StrProperty";
+    static PADDING = [0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.skipBytes(9); // content length (4) + padding (4) + content start marker (1)
+        this.type = "StrProperty";
+        savReader.skipBytes(8); // contains value size + padding
+
+        this.hasGuid = savReader.readBoolean();
+        if (this.hasGuid) {
+            this.guid = savReader.readGuid();
+        }
+
         this.value = savReader.readString();
     }
 
+    getByteSize() {
+        return getStringByteSize(this.name) + 25 + (this.hasGuid ? 16 : 0) + getStringByteSize(this.value);
+    }
+
+    write(savWriter) {
+        savWriter.writeString(this.name);
+        savWriter.writeString(this.type);
+
+        savWriter.writeUInt32((this.hasGuid ? 16 : 0) + getStringByteSize(this.value));
+        savWriter.writeArray(StrProperty.PADDING);
+
+        savWriter.writeBoolean(this.hasGuid);
+        if (this.hasGuid) {
+            savWriter.writeGuid(this.guid);
+        }
+
+        savWriter.writeString(this.value);
+    }
+
+    // backwards compatibility
     toBytes() {
-        const {writeString, writeUint32} = require("../value-writer");
-
-        const nameBytes = writeString(this.name);
-        const typeBytes = writeString(this.type);
-        const valueBytes = writeString(this.value);
-        const contentLengthBytes = writeUint32(valueBytes.length);
-
-        const padding = new Uint8Array(4); // 0x00, 0x00, 0x00, 0x00
-        const contentStartMarker = new Uint8Array([0x00]);
-
-        const totalLength =
-            nameBytes.length +
-            typeBytes.length +
-            contentLengthBytes.length +
-            padding.length +
-            contentStartMarker.length +
-            valueBytes.length;
-
-        const result = new Uint8Array(totalLength);
-        let offset = 0;
-
-        result.set(nameBytes, offset);
-        offset += nameBytes.length;
-
-        result.set(typeBytes, offset);
-        offset += typeBytes.length;
-
-        result.set(contentLengthBytes, offset);
-        offset += contentLengthBytes.length;
-
-        result.set(padding, offset);
-        offset += padding.length;
-
-        result.set(contentStartMarker, offset);
-        offset += contentStartMarker.length;
-
-        result.set(valueBytes, offset);
-
-        return result;
+        const SavWriter = require("../sav-writer");
+        const savWriter = new SavWriter(this.getByteSize());
+        this.write(savWriter);
+        return savWriter.array;
     }
 }
 

@@ -1,9 +1,9 @@
 const SavReader = require("../../../src/converter/sav-reader");
 const StrProperty = require("../../../src/converter/properties/StrProperty");
+const SavWriter = require("../../../src/converter/sav-writer");
 
 test("StrProperty", () => {
-
-    const StrPropertyBytes = new Uint8Array([
+    const data = new Uint8Array([
         /* name length (13) */      0x0D, 0x00, 0x00, 0x00,
         /* name ("TutorialName") */ 0x54, 0x75, 0x74, 0x6F, 0x72, 0x69, 0x61, 0x6C, 0x4E, 0x61, 0x6D, 0x65, 0x00,
 
@@ -26,9 +26,13 @@ test("StrProperty", () => {
         0x63, 0x6F, 0x00
     ]);
 
-    const someStrProperty = new SavReader(StrPropertyBytes.buffer).readProperty();
-    expect(someStrProperty).toBeInstanceOf(StrProperty);
-    expect(someStrProperty.name).toBe("TutorialName");
-    expect(someStrProperty.value).toBe("Tutorial_Hint_PlagueWarning_SporeTowerCleaning_Bosco");
-    expect(someStrProperty.toBytes()).toEqual(StrPropertyBytes);
+    const property = new SavReader(data.buffer).readProperty();
+    expect(property).toBeInstanceOf(StrProperty);
+    expect(property.name).toBe("TutorialName");
+    expect(property.value).toBe("Tutorial_Hint_PlagueWarning_SporeTowerCleaning_Bosco");
+
+    const writer = new SavWriter(property.getByteSize());
+    property.write(writer);
+
+    expect(writer.array).toEqual(data);
 });

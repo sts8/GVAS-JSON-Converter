@@ -1,47 +1,67 @@
+const {getStringByteSize} = require("../sav-writer");
+
 class MulticastInlineDelegateProperty {
-    static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00]);
-    type = "MulticastInlineDelegateProperty";
+    static PADDING = [0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.readUInt32(); // contentSize
-        savReader.skipBytes(5); // padding
-        const number_of_elements = savReader.readUInt32();
+        this.type = "MulticastInlineDelegateProperty";
+        savReader.skipBytes(8); // contains content size + padding
 
-        const tempMap = new Map();
-
-        for (let i = 0; i < number_of_elements; i++) {
-            const object_name = savReader.readString();
-            const function_name = savReader.readString();
-            tempMap.set(object_name, function_name);
+        this.hasGuid = savReader.readBoolean();
+        if (this.hasGuid) {
+            this.guid = savReader.readGuid();
         }
 
-        this.elements = Array.from(tempMap.entries());
+        const numberOfElements = savReader.readUInt32();
+
+        this.elements = Array.from({length: numberOfElements},
+            () => [
+                savReader.readString(),
+                savReader.readString()
+            ]);
     }
 
+    getByteSize() {
+        const byteSize = getStringByteSize(this.name) + 45 + (this.hasGuid ? 16 : 0);
+
+
+        return byteSize + this._getContentSize();
+    }
+
+    _getContentSize() {
+        let contentSize = 4; // padding
+        for (const [objectName, functionName] of this.elements) {
+            contentSize += getStringByteSize(objectName) + getStringByteSize(functionName);
+        }
+        return contentSize;
+    }
+
+    write(savWriter) {
+        savWriter.writeString(this.name);
+        savWriter.writeString(this.type);
+        savWriter.writeUInt32(this._getContentSize());
+        savWriter.writeArray(MulticastInlineDelegateProperty.PADDING);
+
+        savWriter.writeBoolean(this.hasGuid);
+        if (this.hasGuid) {
+            savWriter.writeGuid(this.guid);
+        }
+
+        savWriter.writeUInt32(this.elements.length);
+
+        for (const [objectName, functionName] of this.elements) {
+            savWriter.writeString(objectName);
+            savWriter.writeString(functionName);
+        }
+    }
+
+    // backwards compatibility
     toBytes() {
-        const {writeString, writeUint32} = require("../value-writer");
-
-        let contentSize = 4
-        for (const [object_name, function_name] of this.elements) {
-            contentSize += 4 + object_name.length + 1;
-            contentSize += 4 + function_name.length + 1;
-        }
-
-        let byteArrayContent = new Uint8Array(0);
-
-        for (const [object_name, function_name] of this.elements) {
-            byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(object_name), ...writeString(function_name)]);
-        }
-
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...writeUint32(contentSize),
-            ...MulticastInlineDelegateProperty.padding,
-            ...writeUint32(this.elements.length),
-            ...byteArrayContent
-        ]);
+        const SavWriter = require("../sav-writer");
+        const savWriter = new SavWriter(this.getByteSize());
+        this.write(savWriter);
+        return savWriter.array;
     }
 }
 

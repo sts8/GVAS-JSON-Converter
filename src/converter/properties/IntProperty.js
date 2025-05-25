@@ -1,39 +1,44 @@
+const {getStringByteSize} = require("../sav-writer");
+
 class IntProperty {
-    static padding = new Uint8Array([
-        0x04,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-    type = "IntProperty";
+    static SIZE_FOUR = [0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.skipBytes(IntProperty.padding.length);
+        this.type = "IntProperty";
+        savReader.skipBytes(8); // contains value size
+
+        this.hasGuid = savReader.readBoolean();
+        if (this.hasGuid) {
+            this.guid = savReader.readGuid();
+        }
+
         this.value = savReader.readInt32();
     }
 
+    getByteSize() {
+        return getStringByteSize(this.name) + 29 + (this.hasGuid ? 16 : 0);
+    }
+
+    write(savWriter) {
+        savWriter.writeString(this.name);
+        savWriter.writeString(this.type);
+        savWriter.writeArray(IntProperty.SIZE_FOUR);
+
+        savWriter.writeBoolean(this.hasGuid);
+        if (this.hasGuid) {
+            savWriter.writeGuid(this.guid);
+        }
+
+        savWriter.writeInt32(this.value);
+    }
+
+    // backwards compatibility
     toBytes() {
-        const {writeString, writeInt32} = require("../value-writer");
-
-        const nameBytes = writeString(this.name);
-        const typeBytes = writeString(this.type);
-        const valueBytes = writeInt32(this.value);
-        const padding = IntProperty.padding;
-
-        const totalLength = nameBytes.length + typeBytes.length + padding.length + valueBytes.length;
-        const result = new Uint8Array(totalLength);
-
-        let offset = 0;
-        result.set(nameBytes, offset);
-        offset += nameBytes.length;
-
-        result.set(typeBytes, offset);
-        offset += typeBytes.length;
-
-        result.set(padding, offset);
-        offset += padding.length;
-
-        result.set(valueBytes, offset);
-
-        return result;
+        const SavWriter = require("../sav-writer");
+        const savWriter = new SavWriter(this.getByteSize());
+        this.write(savWriter);
+        return savWriter.array;
     }
 }
 

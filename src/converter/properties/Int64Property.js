@@ -1,41 +1,44 @@
+const {getStringByteSize} = require("../sav-writer");
+
 class Int64Property {
+    static SIZE_EIGHT = [0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
         this.type = "Int64Property";
-        this.unknown = savReader.readBytes(25);
+        savReader.skipBytes(8); // contains value size
+
+        this.hasGuid = savReader.readBoolean();
+        if (this.hasGuid) {
+            this.guid = savReader.readGuid();
+        }
+
         this.value = savReader.readInt64();
     }
 
+    getByteSize() {
+        return getStringByteSize(this.name) + 35 + (this.hasGuid ? 16 : 0);
+    }
+
+    write(savWriter) {
+        savWriter.writeString(this.name);
+        savWriter.writeString(this.type);
+        savWriter.writeArray(Int64Property.SIZE_EIGHT);
+
+        savWriter.writeBoolean(this.hasGuid);
+        if (this.hasGuid) {
+            savWriter.writeGuid(this.guid);
+        }
+
+        savWriter.writeInt64(this.value);
+    }
+
+    // backwards compatibility
     toBytes() {
-        const {writeString, writeBytes, writeInt64} = require("../value-writer");
-
-        const nameBytes = writeString(this.name);
-        const typeBytes = writeString(this.type);
-        const unknownBytes = writeBytes(this.unknown);
-        const valueBytes = writeInt64(this.value);
-
-        const totalLength =
-            nameBytes.length +
-            typeBytes.length +
-            unknownBytes.length +
-            valueBytes.length;
-
-        const output = new Uint8Array(totalLength);
-
-        let offset = 0;
-        output.set(nameBytes, offset);
-        offset += nameBytes.length;
-
-        output.set(typeBytes, offset);
-        offset += typeBytes.length;
-
-        output.set(unknownBytes, offset);
-        offset += unknownBytes.length;
-
-        output.set(valueBytes, offset);
-
-        return output;
+        const SavWriter = require("../sav-writer");
+        const savWriter = new SavWriter(this.getByteSize());
+        this.write(savWriter);
+        return savWriter.array;
     }
 }
 

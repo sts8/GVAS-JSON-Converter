@@ -155,6 +155,12 @@ class SavReader {
         return float;
     }
 
+    readByte() {
+        const int = Number(this.dataView.getUint8(this.offset));
+        this.offset += 1;
+        return int;
+    }
+
     readInt16() {
         const int = Number(this.dataView.getInt16(this.offset, true));
         this.offset += 2;
@@ -177,6 +183,23 @@ class SavReader {
         const int = this.dataView.getBigInt64(this.offset, true);
         this.offset += 8;
         return int;
+    }
+
+    readGuid() {
+        const guidBytes = this.readBytes(16);
+
+        const quarters = [
+            guidBytes.slice(0, 8),
+            guidBytes.slice(8, 16),
+            guidBytes.slice(16, 24),
+            guidBytes.slice(24, 32)
+        ];
+
+        const reversedQuarters = quarters.map(quarter => {
+            return quarter.match(/.{2}/g).reverse().join('');
+        });
+
+        return reversedQuarters.join('').toUpperCase();
     }
 
     // currently, JS does not support Date objects as precise as ticks

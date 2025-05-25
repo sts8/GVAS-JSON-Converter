@@ -1,9 +1,9 @@
 const SavReader = require("../../../src/converter/sav-reader");
 const {MulticastInlineDelegateProperty} = require("../../../src/converter/properties");
+const SavWriter = require("../../../src/converter/sav-writer");
 
 test("MulticastInlineDelegateProperty", () => {
-
-    const MulticastInlineDelegatePropertyBytes = new Uint8Array([
+    const data = new Uint8Array([
         0x1B, 0x00, 0x00, 0x00, 0x4F, 0x6E, 0x57, 0x65, 0x61, 0x70, 0x6F, 0x6E,
         0x4D, 0x61, 0x69, 0x6E, 0x74, 0x65, 0x6E, 0x61, 0x6E, 0x63, 0x65, 0x43,
         0x68, 0x61, 0x6E, 0x67, 0x65, 0x64, 0x00, 0x20, 0x00, 0x00, 0x00, 0x4D,
@@ -38,7 +38,7 @@ test("MulticastInlineDelegateProperty", () => {
         0x64, 0x00
     ]);
 
-    const property = new SavReader(MulticastInlineDelegatePropertyBytes.buffer).readProperty();
+    const property = new SavReader(data.buffer).readProperty();
     expect(property).toBeInstanceOf(MulticastInlineDelegateProperty);
     expect(property.name).toBe("OnWeaponMaintenanceChanged");
     expect(property.elements.length).toBe(2);
@@ -49,5 +49,9 @@ test("MulticastInlineDelegateProperty", () => {
         "/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.Menu_Seasons_C_2147211803.WidgetTree.WND_WeaponMaintenance",
         "OnSavegameChanged"
     ]);
-    expect(property.toBytes()).toEqual(MulticastInlineDelegatePropertyBytes);
+
+    const writer = new SavWriter(property.getByteSize());
+    property.write(writer);
+
+    expect(writer.array).toEqual(data);
 });

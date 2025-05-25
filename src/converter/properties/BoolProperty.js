@@ -1,39 +1,44 @@
+const {getStringByteSize} = require("../sav-writer");
+
 class BoolProperty {
-    static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-    type = "BoolProperty";
+    static PADDING = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        savReader.skipBytes(BoolProperty.padding.length);
+        this.type = "BoolProperty";
+        savReader.skipBytes(8); // contains padding
+
         this.value = savReader.readBoolean();
-        savReader.skipBytes(1);
+
+        this.hasGuid = savReader.readBoolean();
+        if (this.hasGuid) {
+            this.guid = savReader.readGuid();
+        }
     }
 
+    getByteSize() {
+        return getStringByteSize(this.name) + 27 + (this.hasGuid ? 16 : 0);
+    }
+
+    write(savWriter) {
+        savWriter.writeString(this.name);
+        savWriter.writeString(this.type);
+        savWriter.writeArray(BoolProperty.PADDING);
+
+        savWriter.writeBoolean(this.value);
+
+        savWriter.writeBoolean(this.hasGuid);
+        if (this.hasGuid) {
+            savWriter.writeGuid(this.guid);
+        }
+    }
+
+    // backwards compatibility
     toBytes() {
-        const {writeString} = require("../value-writer");
-
-        const nameBytes = writeString(this.name);
-        const typeBytes = writeString(this.type);
-        const padding = BoolProperty.padding;
-        const boolByte = this.value ? 0x01 : 0x00;
-
-        const totalLength = nameBytes.length + typeBytes.length + padding.length + 2;
-        const result = new Uint8Array(totalLength);
-
-        let offset = 0;
-        result.set(nameBytes, offset);
-        offset += nameBytes.length;
-
-        result.set(typeBytes, offset);
-        offset += typeBytes.length;
-
-        result.set(padding, offset);
-        offset += padding.length;
-
-        result[offset++] = boolByte;
-        result[offset++] = 0x00;
-
-        return result;
+        const SavWriter = require("../sav-writer");
+        const savWriter = new SavWriter(this.getByteSize());
+        this.write(savWriter);
+        return savWriter.array;
     }
 }
 
