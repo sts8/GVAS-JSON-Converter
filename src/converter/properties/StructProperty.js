@@ -1,3 +1,6 @@
+import {writeString, writeUint32, writeInt64, writeFloat64, writeBytes} from "../value-writer.js";
+import {assignPrototype} from "../converter.js";
+
 class StructProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
     type = "StructProperty";
@@ -36,8 +39,7 @@ class StructProperty {
     }
 
     toBytes() {
-        const {writeString, writeUint32, writeInt64, writeFloat64, writeBytes} = require("../value-writer");
-        const {assignPrototype} = require("../converter");
+
 
         if (this.subtype === "Guid") {
             return new Uint8Array([
@@ -107,4 +109,4 @@ class StructProperty {
     }
 }
 
-module.exports = StructProperty;
+export default StructProperty;

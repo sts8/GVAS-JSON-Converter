@@ -1,4 +1,4 @@
-const {getStringByteSize} = require("../sav-writer");
+import SavWriter, {getStringByteSize} from "../sav-writer.js";
 
 class MulticastInlineDelegateProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00];
@@ -58,11 +58,10 @@ class MulticastInlineDelegateProperty {
 
     // backwards compatibility
     toBytes() {
-        const SavWriter = require("../sav-writer");
         const savWriter = new SavWriter(this.getByteSize());
         this.write(savWriter);
         return savWriter.array;
     }
 }
 
-module.exports = MulticastInlineDelegateProperty;
+export default MulticastInlineDelegateProperty;

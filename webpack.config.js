@@ -1,8 +1,10 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const path = require('path');
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
+import path from 'path';
 
-module.exports = {
+const __dirname = import.meta.dirname;
+
+export default {
     entry: {
         index: path.resolve(__dirname, 'src/website/main.js')
     },
@@ -17,6 +19,7 @@ module.exports = {
         },
         open: true,
         hot: true,
+        watchFiles: ['src/**/*'],
         host: 'localhost',
         port: 8080
     },

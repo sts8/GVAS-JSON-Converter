@@ -1,12 +1,4 @@
-class SavWriter {
-
-    static getStringByteSize(string) {
-        if (string === "") {
-            return 4;
-        }
-
-        return 5 + string.length;
-    }
+export default class SavWriter {
 
     constructor(totalByteSize) {
         this.offset = 0;
@@ -92,4 +84,10 @@ class SavWriter {
 
 }
 
-module.exports = SavWriter;
+export function getStringByteSize(string) {
+    if (string === "") {
+        return 4;
+    }
+
+    return 5 + string.length;
+}

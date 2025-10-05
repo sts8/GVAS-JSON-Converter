@@ -1,3 +1,5 @@
+import {writeInt32, writeInt16, writeUint32, writeString, writeBytes} from "../value-writer.js";
+
 class HeaderProperty {
     static GVAS = new Uint8Array([0x47, 0x56, 0x41, 0x53]);
     type = "HeaderProperty";
@@ -28,7 +30,7 @@ class HeaderProperty {
     }
 
     toBytes() {
-        const {writeInt32, writeInt16, writeUint32, writeString, writeBytes} = require("../value-writer");
+
 
         let resultArray = new Uint8Array([
             ...HeaderProperty.GVAS,
@@ -56,4 +58,4 @@ class HeaderProperty {
     }
 }
 
-module.exports = HeaderProperty;
+export default HeaderProperty;

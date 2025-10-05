@@ -1,6 +1,9 @@
-const SavReader = require("../../../src/converter/sav-reader");
-const StrProperty = require("../../../src/converter/properties/StrProperty");
-const SavWriter = require("../../../src/converter/sav-writer");
+import test from "node:test";
+import assert from "node:assert/strict";
+
+import SavReader from "../../../src/converter/sav-reader.js";
+import StrProperty from "../../../src/converter/properties/StrProperty.js";
+import SavWriter from "../../../src/converter/sav-writer.js";
 
 test("StrProperty", () => {
     const data = new Uint8Array([
@@ -27,12 +30,12 @@ test("StrProperty", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(StrProperty);
-    expect(property.name).toBe("TutorialName");
-    expect(property.value).toBe("Tutorial_Hint_PlagueWarning_SporeTowerCleaning_Bosco");
+    assert.ok(property instanceof StrProperty, "property should be StrProperty");
+    assert.strictEqual(property.name, "TutorialName");
+    assert.strictEqual(property.value, "Tutorial_Hint_PlagueWarning_SporeTowerCleaning_Bosco");
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });

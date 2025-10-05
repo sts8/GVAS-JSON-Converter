@@ -1,4 +1,4 @@
-const {getStringByteSize} = require("../sav-writer");
+import SavWriter, {getStringByteSize} from "../sav-writer.js";
 
 class StrProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00];
@@ -37,11 +37,10 @@ class StrProperty {
 
     // backwards compatibility
     toBytes() {
-        const SavWriter = require("../sav-writer");
         const savWriter = new SavWriter(this.getByteSize());
         this.write(savWriter);
         return savWriter.array;
     }
 }
 
-module.exports = StrProperty;
+export default StrProperty;

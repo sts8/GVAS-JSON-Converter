@@ -1,8 +1,11 @@
-const SavReader = require("../../../src/converter/sav-reader");
-const ByteProperty = require("../../../src/converter/properties/ByteProperty");
-const SavWriter = require("../../../src/converter/sav-writer");
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
 
-test("ByteProperty", () => {
+import SavReader from '../../../src/converter/sav-reader.js';
+import ByteProperty from '../../../src/converter/properties/ByteProperty.js';
+import SavWriter from '../../../src/converter/sav-writer.js';
+
+test('ByteProperty - CharacterGameDifficulty', () => {
     const data = new Uint8Array([
         /* name length (24) */                 0x18, 0x00, 0x00, 0x00,
         /* name ("CharacterGameDifficulty") */ 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x47, 0x61, 0x6D, 0x65, 0x44, 0x69, 0x66, 0x66, 0x69, 0x63, 0x75, 0x6C, 0x74, 0x79, 0x00,
@@ -21,19 +24,19 @@ test("ByteProperty", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(ByteProperty);
-    expect(property.name).toBe("CharacterGameDifficulty");
-    expect(property.subtype).toBe("None");
-    expect(property.guid).toBeUndefined();
-    expect(property.value).toBe(1);
+    assert(property instanceof ByteProperty);
+    assert.strictEqual(property.name, 'CharacterGameDifficulty');
+    assert.strictEqual(property.subtype, 'None');
+    assert.strictEqual(property.guid, undefined);
+    assert.strictEqual(property.value, 1);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });
 
-test("byte-1 writer", () => {
+test('ByteProperty - byte-1 writer', () => {
     const data = new Uint8Array([
         /* 7 */              0x07, 0x00, 0x00, 0x00,
         /* "byte-1" */       0x62, 0x79, 0x74, 0x65, 0x2D, 0x31, 0x00,
@@ -48,18 +51,18 @@ test("byte-1 writer", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(ByteProperty);
-    expect(property.name).toBe("byte-1");
-    expect(property.guid).toBe("58CA034B41244E912C4B5DA51E18B3D5");
-    expect(property.value).toBe(123);
+    assert(property instanceof ByteProperty);
+    assert.strictEqual(property.name, 'byte-1');
+    assert.strictEqual(property.guid, '58CA034B41244E912C4B5DA51E18B3D5');
+    assert.strictEqual(property.value, 123);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });
 
-test("byte-2", () => {
+test('ByteProperty - byte-2', () => {
     const data = new Uint8Array([
         0x07, 0x00, 0x00, 0x00,
         0x62, 0x79, 0x74, 0x65, 0x2D, 0x32, 0x00, 0x0D, 0x00, 0x00, 0x00,
@@ -71,13 +74,13 @@ test("byte-2", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(ByteProperty);
-    expect(property.name).toBe("byte-2");
-    expect(property.guid).toBe("D64C820047169642F3594A8D6580466B");
-    expect(property.value).toBe(255);
+    assert(property instanceof ByteProperty);
+    assert.strictEqual(property.name, 'byte-2');
+    assert.strictEqual(property.guid, 'D64C820047169642F3594A8D6580466B');
+    assert.strictEqual(property.value, 255);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });

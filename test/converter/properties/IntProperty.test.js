@@ -1,8 +1,11 @@
-const SavReader = require("../../../src/converter/sav-reader");
-const IntProperty = require("../../../src/converter/properties/IntProperty");
-const SavWriter = require("../../../src/converter/sav-writer");
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
 
-test("IntProperty int-1 (with GUID)", () => {
+import SavReader from '../../../src/converter/sav-reader.js';
+import IntProperty from '../../../src/converter/properties/IntProperty.js';
+import SavWriter from '../../../src/converter/sav-writer.js';
+
+test('IntProperty int-1 (with GUID)', () => {
     const data = new Uint8Array([
         /* 6 */                 0x06, 0x00, 0x00, 0x00,
         /* "int-1" */           0x69, 0x6E, 0x74, 0x2D, 0x31, 0x00,
@@ -15,18 +18,18 @@ test("IntProperty int-1 (with GUID)", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(IntProperty);
-    expect(property.name).toBe("int-1");
-    expect(property.guid).toBe("97F8C73246DB647220B8618D6AFF8ED6");
-    expect(property.value).toBe(123);
+    assert(property instanceof IntProperty);
+    assert.strictEqual(property.name, 'int-1');
+    assert.strictEqual(property.guid, '97F8C73246DB647220B8618D6AFF8ED6');
+    assert.strictEqual(property.value, 123);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });
 
-test("IntProperty int-2 (with GUID)", () => {
+test('IntProperty int-2 (with GUID)', () => {
     const data = new Uint8Array([
         /* 6 */                 0x06, 0x00, 0x00, 0x00,
         /* "int-2" */           0x69, 0x6E, 0x74, 0x2D, 0x32, 0x00,
@@ -39,18 +42,18 @@ test("IntProperty int-2 (with GUID)", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(IntProperty);
-    expect(property.name).toBe("int-2");
-    expect(property.guid).toBe("C363F31647E6FD3E9E0712BE6CEAAB15");
-    expect(property.value).toBe(-321);
+    assert(property instanceof IntProperty);
+    assert.strictEqual(property.name, 'int-2');
+    assert.strictEqual(property.guid, 'C363F31647E6FD3E9E0712BE6CEAAB15');
+    assert.strictEqual(property.value, -321);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });
 
-test("IntProperty (with GUID)", () => {
+test('IntProperty asd-integer (with GUID)', () => {
     const data = new Uint8Array([
         /* 12 */                0x0C, 0x00, 0x00, 0x00,
         /* "asd-integer" */     0x61, 0x73, 0x64, 0x2D, 0x69, 0x6E, 0x74, 0x65, 0x67, 0x65, 0x72, 0x00,
@@ -63,18 +66,18 @@ test("IntProperty (with GUID)", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(IntProperty);
-    expect(property.name).toBe("asd-integer");
-    expect(property.guid).toBe("3837A0184F9073461582DA859363636F");
-    expect(property.value).toBe(333);
+    assert(property instanceof IntProperty);
+    assert.strictEqual(property.name, 'asd-integer');
+    assert.strictEqual(property.guid, '3837A0184F9073461582DA859363636F');
+    assert.strictEqual(property.value, 333);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });
 
-test("IntProperty (no GUID)", () => {
+test('IntProperty someIntProperty (no GUID)', () => {
     const data = new Uint8Array([
         /* 16 */                0x10, 0x00, 0x00, 0x00,
         /* "someIntProperty" */ 0x73, 0x6F, 0x6D, 0x65, 0x49, 0x6E, 0x74, 0x50, 0x72, 0x6F, 0x70, 0x65, 0x72, 0x74, 0x79, 0x00,
@@ -86,13 +89,13 @@ test("IntProperty (no GUID)", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(IntProperty);
-    expect(property.name).toBe("someIntProperty");
-    expect(property.guid).toBeUndefined();
-    expect(property.value).toBe(123);
+    assert(property instanceof IntProperty);
+    assert.strictEqual(property.name, 'someIntProperty');
+    assert.strictEqual(property.guid, undefined);
+    assert.strictEqual(property.value, 123);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });

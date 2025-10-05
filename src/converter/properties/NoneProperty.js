@@ -7,4 +7,4 @@ class NoneProperty {
     }
 }
 
-module.exports = NoneProperty;
+export default NoneProperty;

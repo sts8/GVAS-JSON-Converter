@@ -1,23 +1,23 @@
-const HeaderProperty = require("./HeaderProperty");
-const NoneProperty = require("./NoneProperty");
-const BoolProperty = require("./BoolProperty");
-const IntProperty = require("./IntProperty");
-const UInt32Property = require("./UInt32Property");
-const Int64Property = require("./Int64Property");
-const StrProperty = require("./StrProperty");
-const NameProperty = require("./NameProperty");
-const EnumProperty = require("./EnumProperty");
-const FloatProperty = require("./FloatProperty");
-const StructProperty = require("./StructProperty");
-const ArrayProperty = require("./ArrayProperty");
-const MulticastInlineDelegateProperty = require("./MulticastInlineDelegateProperty");
-const MapProperty = require("./MapProperty");
-const SetProperty = require("./SetProperty");
-const ObjectProperty = require("./ObjectProperty");
-const ByteProperty = require("./ByteProperty");
-const FileEndProperty = require("./FileEndProperty");
+import HeaderProperty from "./HeaderProperty.js";
+import NoneProperty from "./NoneProperty.js";
+import BoolProperty from "./BoolProperty.js";
+import IntProperty from "./IntProperty.js";
+import UInt32Property from "./UInt32Property.js";
+import Int64Property from "./Int64Property.js";
+import StrProperty from "./StrProperty.js";
+import NameProperty from "./NameProperty.js";
+import EnumProperty from "./EnumProperty.js";
+import FloatProperty from "./FloatProperty.js";
+import StructProperty from "./StructProperty.js";
+import ArrayProperty from "./ArrayProperty.js";
+import MulticastInlineDelegateProperty from "./MulticastInlineDelegateProperty.js";
+import MapProperty from "./MapProperty.js";
+import SetProperty from "./SetProperty.js";
+import ObjectProperty from "./ObjectProperty.js";
+import ByteProperty from "./ByteProperty.js";
+import FileEndProperty from "./FileEndProperty.js";
 
-module.exports = {
+export {
     HeaderProperty,
     NoneProperty,
     BoolProperty,

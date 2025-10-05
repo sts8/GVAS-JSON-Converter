@@ -1,6 +1,9 @@
-const SavReader = require("../../../src/converter/sav-reader");
-const UInt32Property = require("../../../src/converter/properties/UInt32Property");
-const SavWriter = require("../../../src/converter/sav-writer");
+import test from "node:test";
+import assert from "node:assert/strict";
+
+import SavReader from "../../../src/converter/sav-reader.js";
+import UInt32Property from "../../../src/converter/properties/UInt32Property.js";
+import SavWriter from "../../../src/converter/sav-writer.js";
 
 test("UInt32Property", () => {
     const data = new Uint8Array([
@@ -14,13 +17,13 @@ test("UInt32Property", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(UInt32Property);
-    expect(property.name).toBe("someUInt32Property");
-    expect(property.guid).toBeUndefined();
-    expect(property.value).toBe(789);
+    assert.ok(property instanceof UInt32Property, "should be UInt32Property");
+    assert.strictEqual(property.name, "someUInt32Property");
+    assert.strictEqual(property.guid, undefined);
+    assert.strictEqual(property.value, 789);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });

@@ -1,5 +1,5 @@
-const SavReader = require("./sav-reader");
-const properties = require("./properties");
+import SavReader from "./sav-reader.js";
+import * as properties from "./properties/index.js";
 
 // https://github.com/GoogleChromeLabs/jsbi/issues/30#issuecomment-1006088574
 BigInt.prototype["toJSON"] = function () {
@@ -43,8 +43,4 @@ function convertJsonToSav(jsonString) {
     return output;
 }
 
-module.exports = {
-    convertSavToJson,
-    convertJsonToSav,
-    assignPrototype
-};
+export {convertSavToJson, convertJsonToSav, assignPrototype};

@@ -1,8 +1,11 @@
-const SavReader = require("../../../src/converter/sav-reader");
-const {Int64Property} = require("../../../src/converter/properties");
-const SavWriter = require("../../../src/converter/sav-writer");
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
 
-test("int64-1", () => {
+import SavReader from '../../../src/converter/sav-reader.js';
+import {Int64Property} from '../../../src/converter/properties/index.js';
+import SavWriter from '../../../src/converter/sav-writer.js';
+
+test('Int64Property - int64-1', () => {
     const data = new Uint8Array([
         /* 8 */                    0x08, 0x00, 0x00, 0x00,
         /* "int64-1" */            0x69, 0x6E, 0x74, 0x36, 0x34, 0x2D, 0x31, 0x00,
@@ -15,18 +18,18 @@ test("int64-1", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(Int64Property);
-    expect(property.name).toBe("int64-1");
-    expect(property.guid).toBe("A91206AD4197A87B207B1DBF0BB0EC6A");
-    expect(property.value).toBe(9223372036854775807n);
+    assert(property instanceof Int64Property);
+    assert.strictEqual(property.name, 'int64-1');
+    assert.strictEqual(property.guid, 'A91206AD4197A87B207B1DBF0BB0EC6A');
+    assert.strictEqual(property.value, 9223372036854775807n);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });
 
-test("int64-2", () => {
+test('Int64Property - int64-2', () => {
     const data = new Uint8Array([
         /* 8 */                    0x08, 0x00, 0x00, 0x00,
         /* "int64-2" */            0x69, 0x6E, 0x74, 0x36, 0x34, 0x2D, 0x32, 0x00,
@@ -39,13 +42,13 @@ test("int64-2", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(Int64Property);
-    expect(property.name).toBe("int64-2");
-    expect(property.guid).toBe("E852E17A42E568E174E4ED930BD6426D");
-    expect(property.value).toBe(-5n);
+    assert(property instanceof Int64Property);
+    assert.strictEqual(property.name, 'int64-2');
+    assert.strictEqual(property.guid, 'E852E17A42E568E174E4ED930BD6426D');
+    assert.strictEqual(property.value, -5n);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });

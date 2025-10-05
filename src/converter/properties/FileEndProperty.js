@@ -1,4 +1,4 @@
-const NoneProperty = require("./NoneProperty");
+import NoneProperty from "./NoneProperty.js";
 
 class FileEndProperty {
     static bytes = new Uint8Array([...NoneProperty.bytes, 0x00, 0x00, 0x00, 0x00]);
@@ -9,4 +9,4 @@ class FileEndProperty {
     }
 }
 
-module.exports = FileEndProperty;
+export default FileEndProperty;

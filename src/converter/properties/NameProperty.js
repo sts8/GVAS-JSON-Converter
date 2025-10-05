@@ -1,4 +1,7 @@
 // copied StrProperty
+
+import {writeString, writeUint32} from "../value-writer.js";
+
 class NameProperty {
     type = "NameProperty";
 
@@ -9,7 +12,7 @@ class NameProperty {
     }
 
     toBytes() {
-        const {writeString, writeUint32} = require("../value-writer");
+
 
         const nameBytes = writeString(this.name);
         const typeBytes = writeString(this.type);
@@ -51,4 +54,4 @@ class NameProperty {
     }
 }
 
-module.exports = NameProperty;
+export default NameProperty;

@@ -1,4 +1,6 @@
-const NoneProperty = require("./NoneProperty");
+import NoneProperty from "./NoneProperty.js";
+import {writeBytes, writeString, writeUint32} from "../value-writer.js";
+import {assignPrototype} from "../converter.js";
 
 class ArrayProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
@@ -73,8 +75,7 @@ class ArrayProperty {
     }
 
     toBytes() {
-        const {writeBytes, writeString, writeUint32} = require("../value-writer");
-        const {assignPrototype} = require("../converter");
+
 
         const contentCount = this.value.length;
         let byteArrayContent = new Uint8Array(0);
@@ -166,4 +167,4 @@ class ArrayProperty {
     }
 }
 
-module.exports = ArrayProperty;
+export default ArrayProperty;

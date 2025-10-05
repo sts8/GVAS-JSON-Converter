@@ -1,8 +1,11 @@
-const SavReader = require("../../../src/converter/sav-reader");
-const {MulticastInlineDelegateProperty} = require("../../../src/converter/properties");
-const SavWriter = require("../../../src/converter/sav-writer");
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
 
-test("MulticastInlineDelegateProperty", () => {
+import SavReader from '../../../src/converter/sav-reader.js';
+import {MulticastInlineDelegateProperty} from '../../../src/converter/properties/index.js';
+import SavWriter from '../../../src/converter/sav-writer.js';
+
+test('MulticastInlineDelegateProperty', () => {
     const data = new Uint8Array([
         0x1B, 0x00, 0x00, 0x00, 0x4F, 0x6E, 0x57, 0x65, 0x61, 0x70, 0x6F, 0x6E,
         0x4D, 0x61, 0x69, 0x6E, 0x74, 0x65, 0x6E, 0x61, 0x6E, 0x63, 0x65, 0x43,
@@ -39,19 +42,22 @@ test("MulticastInlineDelegateProperty", () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    expect(property).toBeInstanceOf(MulticastInlineDelegateProperty);
-    expect(property.name).toBe("OnWeaponMaintenanceChanged");
-    expect(property.elements.length).toBe(2);
-    expect(property.elements[0]).toEqual([
-        "/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.ConsoleScreen_Season01_C_2147221655",
-        "OnWeaponMaintenanceChanged"]);
-    expect(property.elements[1]).toEqual([
-        "/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.Menu_Seasons_C_2147211803.WidgetTree.WND_WeaponMaintenance",
-        "OnSavegameChanged"
+    assert(property instanceof MulticastInlineDelegateProperty);
+    assert.strictEqual(property.name, 'OnWeaponMaintenanceChanged');
+    assert.strictEqual(property.elements.length, 2);
+
+    assert.deepStrictEqual(property.elements[0], [
+        '/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.ConsoleScreen_Season01_C_2147221655',
+        'OnWeaponMaintenanceChanged'
+    ]);
+
+    assert.deepStrictEqual(property.elements[1], [
+        '/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.Menu_Seasons_C_2147211803.WidgetTree.WND_WeaponMaintenance',
+        'OnSavegameChanged'
     ]);
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    expect(writer.array).toEqual(data);
+    assert.deepStrictEqual(writer.array, data);
 });

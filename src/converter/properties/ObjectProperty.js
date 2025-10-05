@@ -1,3 +1,5 @@
+import {writeString, writeUint32} from "../value-writer.js";
+
 class ObjectProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00]);
     type = "ObjectProperty";
@@ -10,7 +12,7 @@ class ObjectProperty {
     }
 
     toBytes() {
-        const {writeString, writeUint32} = require("../value-writer");
+
 
         const nameBytes = writeString(this.name);
         const typeBytes = writeString(this.type);
@@ -46,4 +48,4 @@ class ObjectProperty {
     }
 }
 
-module.exports = ObjectProperty;
+export default ObjectProperty;

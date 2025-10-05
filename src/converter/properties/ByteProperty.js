@@ -1,4 +1,4 @@
-const {getStringByteSize} = require("../sav-writer");
+import {getStringByteSize} from "../sav-writer.js";
 
 class ByteProperty {
     static SIZE_ONE = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
@@ -47,4 +47,4 @@ class ByteProperty {
     }
 }
 
-module.exports = ByteProperty;
+export default ByteProperty;

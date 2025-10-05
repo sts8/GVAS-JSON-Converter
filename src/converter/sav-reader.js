@@ -1,8 +1,8 @@
-const {
+import {
     HeaderProperty, NoneProperty, BoolProperty, IntProperty, UInt32Property, Int64Property, StrProperty,
     EnumProperty, FloatProperty, StructProperty, ArrayProperty, MulticastInlineDelegateProperty, MapProperty,
     SetProperty, ObjectProperty, ByteProperty, FileEndProperty, NameProperty
-} = require("./properties");
+} from "./properties/index.js";
 
 // https://stackoverflow.com/a/50868276
 function arrayBufferToHexString(arrayBuffer) {
@@ -223,4 +223,4 @@ class SavReader {
 
 }
 
-module.exports = SavReader;
+export default SavReader;

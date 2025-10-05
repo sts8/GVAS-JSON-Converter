@@ -1,10 +1,11 @@
-const SavReader = require("../../../src/converter/sav-reader");
-const ArrayProperty = require("../../../src/converter/properties/ArrayProperty");
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
 
-test("ArrayProperty - NameProperty", () => {
+import SavReader from '../../../src/converter/sav-reader.js';
+import ArrayProperty from '../../../src/converter/properties/ArrayProperty.js';
 
+test('ArrayProperty - NameProperty', () => {
     const ArrayPropertyBytes = new Uint8Array([
-
         /* name length (20) */              0x14, 0x00, 0x00, 0x00,
         /* name ("CharacterPresetData") */  0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x50, 0x72, 0x65, 0x73, 0x65, 0x74, 0x44, 0x61, 0x74, 0x61, 0x00,
 
@@ -47,9 +48,22 @@ test("ArrayProperty - NameProperty", () => {
     ]);
 
     const someArrayProperty = new SavReader(ArrayPropertyBytes.buffer).readProperty();
-    expect(someArrayProperty).toBeInstanceOf(ArrayProperty);
-    expect(someArrayProperty.name).toBe("CharacterPresetData");
-    expect(someArrayProperty.subtype).toBe("NameProperty");
-    // expect(someArrayProperty.value).toBe("asd");
-    expect(someArrayProperty.toBytes()).toEqual(ArrayPropertyBytes);
+
+    assert(someArrayProperty instanceof ArrayProperty, 'Expected instance of ArrayProperty');
+    assert.strictEqual(someArrayProperty.name, 'CharacterPresetData');
+    assert.strictEqual(someArrayProperty.subtype, 'NameProperty');
+    assert.deepStrictEqual(someArrayProperty.value, [
+        'EyebrowColorMale001',
+        'EyebrowMale005',
+        'EyeColorMale007',
+        'MarkingMale000g',
+        'MarkingMale001b',
+        'MarkingMale002c',
+        'MarkingMale003a',
+        'HairColorMale001',
+        'HairMale007',
+        'FaceMale013',
+        'SkinColorMale008'
+    ]);
+    assert.deepStrictEqual(someArrayProperty.toBytes(), ArrayPropertyBytes);
 });

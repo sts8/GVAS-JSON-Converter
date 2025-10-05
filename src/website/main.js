@@ -1,4 +1,4 @@
-const {convertJsonToSav, convertSavToJson} = require("../converter/converter");
+import {convertJsonToSav, convertSavToJson} from "../converter/converter.js";
 
 function downloadJson(filename, jsonString) {
     const element = document.createElement("a");

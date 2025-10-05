@@ -1,3 +1,5 @@
+import {writeBytes, writeString, writeUint32} from "../value-writer.js";
+
 class SetProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
     type = "SetProperty";
@@ -25,7 +27,7 @@ class SetProperty {
     }
 
     toBytes() {
-        const {writeBytes, writeString, writeUint32} = require("../value-writer");
+
 
         if (this.subtype === "StructProperty") {
 
@@ -61,4 +63,4 @@ class SetProperty {
     }
 }
 
-module.exports = SetProperty;
+export default SetProperty;

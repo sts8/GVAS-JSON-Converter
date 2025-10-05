@@ -1,3 +1,5 @@
+import {writeString, writeFloat32} from "../value-writer.js";
+
 class FloatProperty {
     static padding = new Uint8Array([
         0x04, // ?
@@ -12,7 +14,7 @@ class FloatProperty {
     }
 
     toBytes() {
-        const {writeString, writeFloat32} = require("../value-writer");
+
 
         const nameBytes = writeString(this.name);
         const typeBytes = writeString(this.type);
@@ -43,4 +45,4 @@ class FloatProperty {
     }
 }
 
-module.exports = FloatProperty;
+export default FloatProperty;

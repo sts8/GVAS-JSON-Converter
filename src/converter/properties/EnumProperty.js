@@ -1,3 +1,5 @@
+import {writeString, writeUint32} from "../value-writer.js";
+
 class EnumProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
     type = "EnumProperty";
@@ -13,7 +15,7 @@ class EnumProperty {
     }
 
     toBytes() {
-        const {writeString, writeUint32} = require("../value-writer");
+
 
         const nameBytes = writeString(this.name);
         const typeBytes = writeString(this.type);
@@ -56,4 +58,4 @@ class EnumProperty {
     }
 }
 
-module.exports = EnumProperty;
+export default EnumProperty;
