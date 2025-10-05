@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 
 import {convertSavToJson, convertJsonToSav} from "../../src/converter/converter.js";
 
-const folderPath = "./tests/converter/whole-files/";
+const folderPath = "./test/converter/whole-files/";
 
 for (const fileName of fs.readdirSync(folderPath)) {
     test(fileName, () => {
