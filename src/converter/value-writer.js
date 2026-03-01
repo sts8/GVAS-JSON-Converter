@@ -28,6 +28,10 @@ export function writeFloat32(value) {
     return array;
 }
 
+export function writeByte(value) {
+    return new Uint8Array([value]);
+}
+
 export function writeFloat64(value) {
     const array = new Uint8Array(8);
     new DataView(array.buffer).setFloat64(0, value, true);
