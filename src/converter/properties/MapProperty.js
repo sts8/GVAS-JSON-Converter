@@ -1,5 +1,5 @@
 import NoneProperty from "./NoneProperty.js";
-import {writeBytes, writeInt32, writeFloat32, writeString, writeUint32} from "../value-writer.js";
+import {writeBytes, writeInt32, writeFloat32, writeString, writeUint32, writeByte} from "../value-writer.js";
 import {assignPrototype} from "../converter.js";
 
 class MapProperty {
@@ -33,6 +33,7 @@ class MapProperty {
                     break;
 
                 case "StrProperty":
+                case "NameProperty":
                     currentKey = savReader.readString();
                     break;
 
@@ -62,6 +63,10 @@ class MapProperty {
 
                 case "BoolProperty":
                     currentValue = savReader.readBoolean();
+                    break;
+
+                case "ByteProperty":
+                    currentValue = savReader.readString();
                     break;
 
                 case "StrProperty":
@@ -98,6 +103,7 @@ class MapProperty {
                     break;
 
                 case "StrProperty":
+                case "NameProperty":
                     byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(currentKey)]);
                     break;
 
@@ -122,6 +128,10 @@ class MapProperty {
                     break;
 
                 case "StrProperty":
+                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(currentValue)]);
+                    break;
+
+                case "ByteProperty":
                     byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(currentValue)]);
                     break;
 
