@@ -40,3 +40,4 @@ function loadJsonFile() {
 
 document.getElementById("sav-input").addEventListener("change", loadSavFile);
 document.getElementById("json-input").addEventListener("change", loadJsonFile);
+document.getElementById("build-info").textContent = `${__COMMIT_HASH__} · ${__BUILD_TIME__}`;
