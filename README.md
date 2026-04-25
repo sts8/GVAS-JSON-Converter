@@ -4,9 +4,7 @@ Convert Unreal Engine .sav files to JSON and vice versa. Written in JavaScript, 
 
 ## Use
 
-[Click here!](https://sts8.github.io/GVAS-JSON-Converter/dist/index.html)
-
-You can also download this repo and open dist/index.html in your browser.
+[Click here!](https://sts8.github.io/GVAS-JSON-Converter/)
 
 ## Tested Games
 
