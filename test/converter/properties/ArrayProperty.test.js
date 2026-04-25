@@ -1,5 +1,4 @@
-import {test} from 'node:test';
-import assert from 'node:assert/strict';
+import {expect, test} from 'vitest';
 
 import SavReader from '../../../src/converter/sav-reader.js';
 import ArrayProperty from '../../../src/converter/properties/ArrayProperty.js';
@@ -49,10 +48,10 @@ test('ArrayProperty - NameProperty', () => {
 
     const someArrayProperty = new SavReader(ArrayPropertyBytes.buffer).readProperty();
 
-    assert(someArrayProperty instanceof ArrayProperty, 'Expected instance of ArrayProperty');
-    assert.strictEqual(someArrayProperty.name, 'CharacterPresetData');
-    assert.strictEqual(someArrayProperty.subtype, 'NameProperty');
-    assert.deepStrictEqual(someArrayProperty.value, [
+    expect(someArrayProperty).toBeInstanceOf(ArrayProperty);
+    expect(someArrayProperty.name).toBe('CharacterPresetData');
+    expect(someArrayProperty.subtype).toBe('NameProperty');
+    expect(someArrayProperty.value).toStrictEqual([
         'EyebrowColorMale001',
         'EyebrowMale005',
         'EyeColorMale007',
@@ -65,5 +64,5 @@ test('ArrayProperty - NameProperty', () => {
         'FaceMale013',
         'SkinColorMale008'
     ]);
-    assert.deepStrictEqual(someArrayProperty.toBytes(), ArrayPropertyBytes);
+    expect(someArrayProperty.toBytes()).toStrictEqual(ArrayPropertyBytes);
 });

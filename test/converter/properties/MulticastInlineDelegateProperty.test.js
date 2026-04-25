@@ -1,5 +1,4 @@
-import {test} from 'node:test';
-import assert from 'node:assert/strict';
+import {expect, test} from 'vitest';
 
 import SavReader from '../../../src/converter/sav-reader.js';
 import {MulticastInlineDelegateProperty} from '../../../src/converter/properties/index.js';
@@ -42,16 +41,16 @@ test('MulticastInlineDelegateProperty', () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    assert(property instanceof MulticastInlineDelegateProperty);
-    assert.strictEqual(property.name, 'OnWeaponMaintenanceChanged');
-    assert.strictEqual(property.elements.length, 2);
+    expect(property).toBeInstanceOf(MulticastInlineDelegateProperty);
+    expect(property.name).toBe('OnWeaponMaintenanceChanged');
+    expect(property.elements.length).toBe(2);
 
-    assert.deepStrictEqual(property.elements[0], [
+    expect(property.elements[0]).toStrictEqual([
         '/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.ConsoleScreen_Season01_C_2147221655',
         'OnWeaponMaintenanceChanged'
     ]);
 
-    assert.deepStrictEqual(property.elements[1], [
+    expect(property.elements[1]).toStrictEqual([
         '/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.Menu_Seasons_C_2147211803.WidgetTree.WND_WeaponMaintenance',
         'OnSavegameChanged'
     ]);
@@ -59,5 +58,5 @@ test('MulticastInlineDelegateProperty', () => {
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    assert.deepStrictEqual(writer.array, data);
+    expect(writer.array).toStrictEqual(data);
 });

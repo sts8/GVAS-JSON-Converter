@@ -1,5 +1,4 @@
-import {test} from 'node:test';
-import assert from 'node:assert/strict';
+import {expect, test} from 'vitest';
 
 import SavReader from '../../../src/converter/sav-reader.js';
 import BoolProperty from '../../../src/converter/properties/BoolProperty.js';
@@ -17,15 +16,15 @@ test('BoolProperty - True (no GUID)', () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    assert(property instanceof BoolProperty);
-    assert.strictEqual(property.name, 'someBoolProperty');
-    assert.strictEqual(property.value, true);
-    assert.strictEqual(property.guid, undefined);
+    expect(property).toBeInstanceOf(BoolProperty);
+    expect(property.name).toBe('someBoolProperty');
+    expect(property.value).toBe(true);
+    expect(property.guid).toBeUndefined();
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    assert.deepStrictEqual(writer.array, data);
+    expect(writer.array).toStrictEqual(data);
 });
 
 test('BoolProperty - False (no GUID)', () => {
@@ -40,15 +39,15 @@ test('BoolProperty - False (no GUID)', () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    assert(property instanceof BoolProperty);
-    assert.strictEqual(property.name, 'someBoolProperty');
-    assert.strictEqual(property.value, false);
-    assert.strictEqual(property.guid, undefined);
+    expect(property).toBeInstanceOf(BoolProperty);
+    expect(property.name).toBe('someBoolProperty');
+    expect(property.value).toBe(false);
+    expect(property.guid).toBeUndefined();
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    assert.deepStrictEqual(writer.array, data);
+    expect(writer.array).toStrictEqual(data);
 });
 
 test('BoolProperty - True (with GUID)', () => {
@@ -64,15 +63,15 @@ test('BoolProperty - True (with GUID)', () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    assert(property instanceof BoolProperty);
-    assert.strictEqual(property.name, 'bool-1');
-    assert.strictEqual(property.value, true);
-    assert.strictEqual(property.guid, 'DF709F77460B05A6F4B4658FCFD32203');
+    expect(property).toBeInstanceOf(BoolProperty);
+    expect(property.name).toBe('bool-1');
+    expect(property.value).toBe(true);
+    expect(property.guid).toBe('DF709F77460B05A6F4B4658FCFD32203');
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    assert.deepStrictEqual(writer.array, data);
+    expect(writer.array).toStrictEqual(data);
 });
 
 test('BoolProperty - False (with GUID)', () => {
@@ -88,13 +87,13 @@ test('BoolProperty - False (with GUID)', () => {
     ]);
 
     const property = new SavReader(data.buffer).readProperty();
-    assert(property instanceof BoolProperty);
-    assert.strictEqual(property.name, 'bool-2');
-    assert.strictEqual(property.value, false);
-    assert.strictEqual(property.guid, '4813E0C748F120DDC0AD07B91537E005');
+    expect(property).toBeInstanceOf(BoolProperty);
+    expect(property.name).toBe('bool-2');
+    expect(property.value).toBe(false);
+    expect(property.guid).toBe('4813E0C748F120DDC0AD07B91537E005');
 
     const writer = new SavWriter(property.getByteSize());
     property.write(writer);
 
-    assert.deepStrictEqual(writer.array, data);
+    expect(writer.array).toStrictEqual(data);
 });

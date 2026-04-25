@@ -1,4 +1,4 @@
-import {getStringByteSize} from "../sav-writer.js";
+import SavWriter, {getStringByteSize} from "../sav-writer.js";
 
 class ByteProperty {
     static SIZE_ONE = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
@@ -40,7 +40,6 @@ class ByteProperty {
 
     // backwards compatibility
     toBytes() {
-        const SavWriter = require("../sav-writer");
         const savWriter = new SavWriter(this.getByteSize());
         this.write(savWriter);
         return savWriter.array;

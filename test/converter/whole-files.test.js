@@ -1,11 +1,10 @@
-import fs from "fs";
-import path from "path";
-import test from "node:test";
-import assert from "node:assert/strict";
+import fs from 'fs';
+import path from 'path';
+import {expect, test} from 'vitest';
 
-import {convertSavToJson, convertJsonToSav} from "../../src/converter/converter.js";
+import {convertJsonToSav, convertSavToJson} from '../../src/converter/converter.js';
 
-const folderPath = "./test/converter/whole-files/";
+const folderPath = './test/converter/whole-files/';
 
 for (const fileName of fs.readdirSync(folderPath)) {
     test(fileName, () => {
@@ -13,6 +12,6 @@ for (const fileName of fs.readdirSync(folderPath)) {
         const jsonString = convertSavToJson(savArray.buffer);
         const resultSavArray = convertJsonToSav(jsonString);
 
-        assert.deepStrictEqual(resultSavArray, savArray);
+        expect(resultSavArray).toStrictEqual(savArray);
     });
 }
