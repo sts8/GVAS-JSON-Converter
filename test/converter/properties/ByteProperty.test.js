@@ -29,10 +29,10 @@ test('ByteProperty - CharacterGameDifficulty', () => {
     expect(property.guid).toBeUndefined();
     expect(property.value).toBe(1);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('ByteProperty - byte-1 writer', () => {
@@ -55,10 +55,10 @@ test('ByteProperty - byte-1 writer', () => {
     expect(property.guid).toBe('58CA034B41244E912C4B5DA51E18B3D5');
     expect(property.value).toBe(123);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('ByteProperty - byte-2', () => {
@@ -78,8 +78,8 @@ test('ByteProperty - byte-2', () => {
     expect(property.guid).toBe('D64C820047169642F3594A8D6580466B');
     expect(property.value).toBe(255);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });

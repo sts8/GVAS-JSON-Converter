@@ -22,10 +22,10 @@ test('IntProperty int-1 (with GUID)', () => {
     expect(property.guid).toBe('97F8C73246DB647220B8618D6AFF8ED6');
     expect(property.value).toBe(123);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('IntProperty int-2 (with GUID)', () => {
@@ -46,10 +46,10 @@ test('IntProperty int-2 (with GUID)', () => {
     expect(property.guid).toBe('C363F31647E6FD3E9E0712BE6CEAAB15');
     expect(property.value).toBe(-321);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('IntProperty asd-integer (with GUID)', () => {
@@ -70,10 +70,10 @@ test('IntProperty asd-integer (with GUID)', () => {
     expect(property.guid).toBe('3837A0184F9073461582DA859363636F');
     expect(property.value).toBe(333);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('IntProperty someIntProperty (no GUID)', () => {
@@ -93,8 +93,8 @@ test('IntProperty someIntProperty (no GUID)', () => {
     expect(property.guid).toBeUndefined();
     expect(property.value).toBe(123);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });

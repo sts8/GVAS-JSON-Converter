@@ -16,10 +16,6 @@ class StrProperty {
         this.value = savReader.readString();
     }
 
-    getByteSize() {
-        return getStringByteSize(this.name) + 25 + (this.hasGuid ? 16 : 0) + getStringByteSize(this.value);
-    }
-
     write(savWriter) {
         savWriter.writeString(this.name);
         savWriter.writeString(this.type);
@@ -37,9 +33,9 @@ class StrProperty {
 
     // backwards compatibility
     toBytes() {
-        const savWriter = new SavWriter(this.getByteSize());
+        const savWriter = new SavWriter();
         this.write(savWriter);
-        return savWriter.array;
+        return savWriter.result;
     }
 }
 

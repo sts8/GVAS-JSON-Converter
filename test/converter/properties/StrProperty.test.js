@@ -33,8 +33,8 @@ test('StrProperty', () => {
     expect(property.name).toBe('TutorialName');
     expect(property.value).toBe('Tutorial_Hint_PlagueWarning_SporeTowerCleaning_Bosco');
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });

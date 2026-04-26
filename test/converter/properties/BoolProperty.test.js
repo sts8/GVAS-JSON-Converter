@@ -21,10 +21,10 @@ test('BoolProperty - True (no GUID)', () => {
     expect(property.value).toBe(true);
     expect(property.guid).toBeUndefined();
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('BoolProperty - False (no GUID)', () => {
@@ -44,10 +44,10 @@ test('BoolProperty - False (no GUID)', () => {
     expect(property.value).toBe(false);
     expect(property.guid).toBeUndefined();
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('BoolProperty - True (with GUID)', () => {
@@ -68,10 +68,10 @@ test('BoolProperty - True (with GUID)', () => {
     expect(property.value).toBe(true);
     expect(property.guid).toBe('DF709F77460B05A6F4B4658FCFD32203');
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('BoolProperty - False (with GUID)', () => {
@@ -92,8 +92,8 @@ test('BoolProperty - False (with GUID)', () => {
     expect(property.value).toBe(false);
     expect(property.guid).toBe('4813E0C748F120DDC0AD07B91537E005');
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });

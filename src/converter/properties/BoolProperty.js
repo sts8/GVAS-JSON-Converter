@@ -1,4 +1,4 @@
-import SavWriter, {getStringByteSize} from "../sav-writer.js";
+import SavWriter from "../sav-writer.js";
 
 class BoolProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
@@ -14,10 +14,6 @@ class BoolProperty {
         if (this.hasGuid) {
             this.guid = savReader.readGuid();
         }
-    }
-
-    getByteSize() {
-        return getStringByteSize(this.name) + 27 + (this.hasGuid ? 16 : 0);
     }
 
     write(savWriter) {
@@ -36,9 +32,9 @@ class BoolProperty {
     // backwards compatibility
     toBytes() {
 
-        const savWriter = new SavWriter(this.getByteSize());
+        const savWriter = new SavWriter();
         this.write(savWriter);
-        return savWriter.array;
+        return savWriter.result;
     }
 }
 

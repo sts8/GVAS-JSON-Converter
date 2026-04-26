@@ -22,10 +22,10 @@ test('Int64Property - int64-1', () => {
     expect(property.guid).toBe('A91206AD4197A87B207B1DBF0BB0EC6A');
     expect(property.value).toBe(9223372036854775807n);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
 
 test('Int64Property - int64-2', () => {
@@ -46,8 +46,8 @@ test('Int64Property - int64-2', () => {
     expect(property.guid).toBe('E852E17A42E568E174E4ED930BD6426D');
     expect(property.value).toBe(-5n);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });

@@ -21,8 +21,8 @@ test('UInt32Property', () => {
     expect(property.guid).toBeUndefined();
     expect(property.value).toBe(789);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });

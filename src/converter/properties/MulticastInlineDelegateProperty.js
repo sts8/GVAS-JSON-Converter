@@ -22,13 +22,6 @@ class MulticastInlineDelegateProperty {
             ]);
     }
 
-    getByteSize() {
-        const byteSize = getStringByteSize(this.name) + 45 + (this.hasGuid ? 16 : 0);
-
-
-        return byteSize + this._getContentSize();
-    }
-
     _getContentSize() {
         let contentSize = 4; // padding
         for (const [objectName, functionName] of this.elements) {
@@ -58,9 +51,9 @@ class MulticastInlineDelegateProperty {
 
     // backwards compatibility
     toBytes() {
-        const savWriter = new SavWriter(this.getByteSize());
+        const savWriter = new SavWriter();
         this.write(savWriter);
-        return savWriter.array;
+        return savWriter.result;
     }
 }
 

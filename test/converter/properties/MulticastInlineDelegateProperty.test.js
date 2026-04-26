@@ -55,8 +55,8 @@ test('MulticastInlineDelegateProperty', () => {
         'OnSavegameChanged'
     ]);
 
-    const writer = new SavWriter(property.getByteSize());
+    const writer = new SavWriter();
     property.write(writer);
 
-    expect(writer.array).toStrictEqual(data);
+    expect(writer.result).toStrictEqual(data);
 });
