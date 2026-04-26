@@ -9,8 +9,8 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "benchmark": "latest",
-        "vite": "latest",
-        "vitest": "latest"
+        "benchmark": "^2.1.4",
+        "vite": "^8.0.10",
+        "vitest": "^4.1.5"
     }
 }
