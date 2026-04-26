@@ -1,5 +1,3 @@
-import SavWriter from '../sav-writer.js';
-
 class UInt32Property {
     static SIZE_FOUR = [0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
@@ -27,12 +25,6 @@ class UInt32Property {
         }
 
         savWriter.writeUInt32(this.value);
-    }
-
-    toBytes() {
-        const savWriter = new SavWriter();
-        this.write(savWriter);
-        return savWriter.result;
     }
 }
 

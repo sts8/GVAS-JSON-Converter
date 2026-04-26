@@ -1,4 +1,4 @@
-import SavWriter, {getStringByteSize} from '../sav-writer.js';
+import {getStringByteSize} from '../sav-writer.js';
 
 class MulticastInlineDelegateProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00];
@@ -47,12 +47,6 @@ class MulticastInlineDelegateProperty {
             savWriter.writeString(objectName);
             savWriter.writeString(functionName);
         }
-    }
-
-    toBytes() {
-        const savWriter = new SavWriter();
-        this.write(savWriter);
-        return savWriter.result;
     }
 }
 

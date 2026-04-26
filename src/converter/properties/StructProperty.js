@@ -38,9 +38,7 @@ class StructProperty {
         }
     }
 
-    toBytes() {
-        const writer = new SavWriter();
-
+    write(writer) {
         if (this.subtype === 'Guid') {
             writer.writeString(this.name);
             writer.writeString(this.type);
@@ -49,7 +47,7 @@ class StructProperty {
             writer.writeString('Guid');
             writer.writeHex(this.guid + '00');
             writer.writeHex(this.value);
-            return writer.result;
+            return;
         }
 
         if (this.subtype === 'DateTime') {
@@ -60,7 +58,7 @@ class StructProperty {
             writer.writeString('DateTime');
             writer.writeHex(this.guid + '00');
             writer.writeInt64(this.value);
-            return writer.result;
+            return;
         }
 
         if (this.subtype === 'Vector2D') {
@@ -73,17 +71,17 @@ class StructProperty {
             writer.writeHex(this.guid + '00');
             writer.writeFloat64(x);
             writer.writeFloat64(y);
-            return writer.result;
+            return;
         }
 
         const contentWriter = new SavWriter();
         for (let i = 0; i < this.value.length; i++) {
             if (Array.isArray(this.value[i])) {
                 for (let j = 0; j < this.value[i].length; j++) {
-                    contentWriter.writeArray(assignPrototype(this.value[i][j]).toBytes());
+                    assignPrototype(this.value[i][j]).write(contentWriter);
                 }
             } else {
-                contentWriter.writeArray(assignPrototype(this.value[i]).toBytes());
+                assignPrototype(this.value[i]).write(contentWriter);
             }
         }
         const content = contentWriter.result;
@@ -95,7 +93,6 @@ class StructProperty {
         writer.writeString(this.subtype);
         writer.writeHex(this.guid + '00');
         writer.writeArray(content);
-        return writer.result;
     }
 }
 

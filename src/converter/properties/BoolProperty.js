@@ -1,5 +1,3 @@
-import SavWriter from '../sav-writer.js';
-
 class BoolProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
@@ -27,12 +25,6 @@ class BoolProperty {
         if (this.hasGuid) {
             savWriter.writeGuid(this.guid);
         }
-    }
-
-    toBytes() {
-        const savWriter = new SavWriter();
-        this.write(savWriter);
-        return savWriter.result;
     }
 }
 

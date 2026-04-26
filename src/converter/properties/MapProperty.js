@@ -78,7 +78,7 @@ class MapProperty {
         this.value = Array.from(tempMap.entries());
     }
 
-    toBytes() {
+    write(writer) {
         const contentWriter = new SavWriter();
         const tempMap = new Map(this.value);
 
@@ -101,7 +101,7 @@ class MapProperty {
             switch (this.valueType) {
                 case 'StructProperty':
                     for (let i = 0; i < currentValue.length; i++) {
-                        contentWriter.writeArray(assignPrototype(currentValue[i]).toBytes());
+                        assignPrototype(currentValue[i]).write(contentWriter);
                     }
                     break;
                 case 'IntProperty':
@@ -122,7 +122,6 @@ class MapProperty {
         }
 
         const content = contentWriter.result;
-        const writer = new SavWriter();
         writer.writeString(this.name);
         writer.writeString(this.type);
         writer.writeUInt32(4 + 4 + content.length);
@@ -133,7 +132,6 @@ class MapProperty {
         writer.writeByte(0x00);
         writer.writeUInt32(tempMap.size);
         writer.writeArray(content);
-        return writer.result;
     }
 }
 

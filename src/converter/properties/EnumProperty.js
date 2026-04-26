@@ -1,5 +1,3 @@
-import SavWriter from '../sav-writer.js';
-
 class EnumProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
     type = 'EnumProperty';
@@ -14,8 +12,7 @@ class EnumProperty {
         this.value = savReader.readString();
     }
 
-    toBytes() {
-        const writer = new SavWriter();
+    write(writer) {
         writer.writeString(this.name);
         writer.writeString(this.type);
         writer.writeUInt32(4 + this.value.length + 1);
@@ -23,7 +20,6 @@ class EnumProperty {
         writer.writeString(this.enum);
         writer.writeByte(0x00);
         writer.writeString(this.value);
-        return writer.result;
     }
 }
 

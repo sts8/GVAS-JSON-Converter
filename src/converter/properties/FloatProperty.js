@@ -1,5 +1,3 @@
-import SavWriter from '../sav-writer.js';
-
 class FloatProperty {
     static padding = new Uint8Array([
         0x04, // ?
@@ -13,13 +11,11 @@ class FloatProperty {
         this.value = savReader.readFloat32();
     }
 
-    toBytes() {
-        const writer = new SavWriter();
+    write(writer) {
         writer.writeString(this.name);
         writer.writeString(this.type);
         writer.writeArray(FloatProperty.padding);
         writer.writeFloat32(this.value);
-        return writer.result;
     }
 }
 

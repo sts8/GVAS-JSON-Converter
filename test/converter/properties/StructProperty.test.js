@@ -1,6 +1,7 @@
 import {expect, test} from 'vitest';
 
 import SavReader from '../../../src/converter/sav-reader.js';
+import SavWriter from '../../../src/converter/sav-writer.js';
 import StructProperty from '../../../src/converter/properties/StructProperty.js';
 
 test('StructProperty - DateTime', () => {
@@ -32,7 +33,9 @@ test('StructProperty - DateTime', () => {
     expect(someStructProperty.name).toBe('SaveTime');
     expect(someStructProperty.subtype).toBe('DateTime');
     expect(someStructProperty.value).toBe(638264314203090000n);
-    expect(someStructProperty.toBytes()).toStrictEqual(bytes);
+    const writer = new SavWriter();
+    someStructProperty.write(writer);
+    expect(writer.result).toStrictEqual(bytes);
 });
 
 test('StructProperty - DateTime 2', () => {
@@ -64,5 +67,7 @@ test('StructProperty - DateTime 2', () => {
     expect(someStructProperty.name).toBe('GameTime');
     expect(someStructProperty.subtype).toBe('DateTime');
     expect(someStructProperty.value).toBe(189556562872n);
-    expect(someStructProperty.toBytes()).toStrictEqual(bytes);
+    const writer = new SavWriter();
+    someStructProperty.write(writer);
+    expect(writer.result).toStrictEqual(bytes);
 });

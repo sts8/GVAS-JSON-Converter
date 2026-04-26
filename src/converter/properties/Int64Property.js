@@ -1,5 +1,3 @@
-import SavWriter from '../sav-writer.js';
-
 class Int64Property {
     static SIZE_EIGHT = [0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
@@ -29,11 +27,7 @@ class Int64Property {
         savWriter.writeInt64(this.value);
     }
 
-    toBytes() {
-        const savWriter = new SavWriter(getStringByteSize(this.name) + 35 + (this.hasGuid ? 16 : 0));
-        this.write(savWriter);
-        return savWriter.result;
-    }
+
 }
 
 export default Int64Property;

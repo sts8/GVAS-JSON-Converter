@@ -19,6 +19,8 @@ import {
     UInt32Property
 } from './properties/index.js';
 
+const textDecoder = new TextDecoder();
+
 // https://stackoverflow.com/a/50868276
 function toHexString(bytes) {
     return [...bytes].reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
@@ -145,7 +147,7 @@ class SavReader {
         const size = this.dataView.getUint32(this.offset, true);
         this.offset += 4;
 
-        const string = new TextDecoder().decode(this.bytes.subarray(this.offset, this.offset + size - 1));
+        const string = textDecoder.decode(this.bytes.subarray(this.offset, this.offset + size - 1));
         this.offset += size;
 
         // console.log("read string: ", string);

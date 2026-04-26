@@ -71,9 +71,8 @@ class ArrayProperty {
         }
     }
 
-    toBytes() {
+    write(writer) {
         const contentCount = this.value.length;
-        const writer = new SavWriter();
 
         switch (this.subtype) {
             case 'StructProperty': {
@@ -90,10 +89,10 @@ class ArrayProperty {
                         for (let i = 0; i < contentCount; i++) {
                             if (Array.isArray(this.value[i])) {
                                 for (let j = 0; j < this.value[i].length; j++) {
-                                    contentWriter.writeArray(assignPrototype(this.value[i][j]).toBytes());
+                                    assignPrototype(this.value[i][j]).write(contentWriter);
                                 }
                             } else {
-                                contentWriter.writeArray(assignPrototype(this.value[i]).toBytes());
+                                assignPrototype(this.value[i]).write(contentWriter);
                             }
                         }
                 }
@@ -123,7 +122,7 @@ class ArrayProperty {
                 writer.writeString(this.genericType);
                 writer.writeHex(this.guid + '00');
                 writer.writeArray(content);
-                return writer.result;
+                break;
             }
 
             case 'NameProperty': {
@@ -142,7 +141,7 @@ class ArrayProperty {
                 writer.writeByte(0x00);
                 writer.writeUInt32(contentCount);
                 writer.writeArray(contentWriter.result);
-                return writer.result;
+                break;
             }
 
             default: {
@@ -154,7 +153,6 @@ class ArrayProperty {
                 writer.writeString(this.subtype);
                 writer.writeByte(0x00);
                 writer.writeHex(this.value);
-                return writer.result;
             }
         }
     }

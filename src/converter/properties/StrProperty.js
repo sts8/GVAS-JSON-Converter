@@ -1,4 +1,4 @@
-import SavWriter, {getStringByteSize} from '../sav-writer.js';
+import {getStringByteSize} from '../sav-writer.js';
 
 class StrProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00];
@@ -29,12 +29,6 @@ class StrProperty {
         }
 
         savWriter.writeString(this.value);
-    }
-
-    toBytes() {
-        const savWriter = new SavWriter();
-        this.write(savWriter);
-        return savWriter.result;
     }
 }
 

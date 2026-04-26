@@ -1,3 +1,5 @@
+const textEncoder = new TextEncoder();
+
 export default class SavWriter {
 
     constructor(initialCapacity = 512 * 1024) {
@@ -24,7 +26,7 @@ export default class SavWriter {
             this.dataView.setUint32(this.offset, 0, true);
             this.offset += 4;
         } else {
-            const encoded = new TextEncoder().encode(string);
+            const encoded = textEncoder.encode(string);
             this.#ensure(5 + encoded.length);
             this.dataView.setUint32(this.offset, encoded.length + 1, true);
             this.offset += 4;

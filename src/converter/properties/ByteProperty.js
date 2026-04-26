@@ -1,5 +1,3 @@
-import SavWriter from '../sav-writer.js';
-
 class ByteProperty {
     static SIZE_ONE = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
@@ -30,12 +28,6 @@ class ByteProperty {
         }
 
         savWriter.writeByte(this.value);
-    }
-
-    toBytes() {
-        const savWriter = new SavWriter();
-        this.write(savWriter);
-        return savWriter.result;
     }
 }
 

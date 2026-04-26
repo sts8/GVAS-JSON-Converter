@@ -1,4 +1,5 @@
 import SavReader from './sav-reader.js';
+import SavWriter from './sav-writer.js';
 import * as properties from './properties/index.js';
 
 // https://github.com/GoogleChromeLabs/jsbi/issues/30#issuecomment-1006088574
@@ -25,22 +26,11 @@ function convertSavToJson(bytes) {
 
 function convertJsonToSav(jsonString) {
     const rawProperties = JSON.parse(jsonString);
-
-    const byteArrays = rawProperties.map(rawProperty => {
-        const typedProperty = assignPrototype(rawProperty);
-        return typedProperty.toBytes();
-    });
-
-    const totalLength = byteArrays.reduce((sum, arr) => sum + arr.length, 0);
-    const output = new Uint8Array(totalLength);
-
-    let offset = 0;
-    for (const bytes of byteArrays) {
-        output.set(bytes, offset);
-        offset += bytes.length;
+    const writer = new SavWriter();
+    for (const rawProperty of rawProperties) {
+        assignPrototype(rawProperty).write(writer);
     }
-
-    return output;
+    return writer.result;
 }
 
 export {convertSavToJson, convertJsonToSav, assignPrototype};

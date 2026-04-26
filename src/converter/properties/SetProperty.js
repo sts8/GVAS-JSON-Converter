@@ -24,9 +24,7 @@ class SetProperty {
         this.value = savReader.readBytes(contentSize);
     }
 
-    toBytes() {
-        const writer = new SavWriter();
-
+    write(writer) {
         if (this.subtype === 'StructProperty') {
             const contentCount = this.value.length;
 
@@ -45,7 +43,7 @@ class SetProperty {
             writer.writeArray(SetProperty.padding);
             writer.writeUInt32(contentCount);
             writer.writeArray(content);
-            return writer.result;
+            return;
         }
 
         writer.writeString(this.name);
@@ -55,7 +53,6 @@ class SetProperty {
         writer.writeString(this.subtype);
         writer.writeByte(0x00);
         writer.writeHex(this.value);
-        return writer.result;
     }
 }
 

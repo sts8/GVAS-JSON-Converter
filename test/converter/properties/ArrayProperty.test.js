@@ -1,6 +1,7 @@
 import {expect, test} from 'vitest';
 
 import SavReader from '../../../src/converter/sav-reader.js';
+import SavWriter from '../../../src/converter/sav-writer.js';
 import ArrayProperty from '../../../src/converter/properties/ArrayProperty.js';
 
 test('ArrayProperty - NameProperty', () => {
@@ -64,5 +65,7 @@ test('ArrayProperty - NameProperty', () => {
         'FaceMale013',
         'SkinColorMale008'
     ]);
-    expect(someArrayProperty.toBytes()).toStrictEqual(ArrayPropertyBytes);
+    const writer = new SavWriter();
+    someArrayProperty.write(writer);
+    expect(writer.result).toStrictEqual(ArrayPropertyBytes);
 });

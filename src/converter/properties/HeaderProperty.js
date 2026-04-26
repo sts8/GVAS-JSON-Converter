@@ -1,5 +1,3 @@
-import SavWriter from '../sav-writer.js';
-
 class HeaderProperty {
     static GVAS = new Uint8Array([0x47, 0x56, 0x41, 0x53]);
     type = 'HeaderProperty';
@@ -29,9 +27,7 @@ class HeaderProperty {
         this.saveGameClassName = savReader.readString();
     }
 
-    toBytes() {
-        const writer = new SavWriter();
-
+    write(writer) {
         writer.writeArray(HeaderProperty.GVAS);
         writer.writeInt32(this.saveGameVersion);
         writer.writeInt32(this.packageVersion);
@@ -52,7 +48,6 @@ class HeaderProperty {
         }
 
         writer.writeString(this.saveGameClassName);
-        return writer.result;
     }
 }
 
