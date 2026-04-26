@@ -1,8 +1,8 @@
-import {writeInt32, writeInt16, writeUint32, writeString, writeBytes} from "../value-writer.js";
+import SavWriter from '../sav-writer.js';
 
 class HeaderProperty {
     static GVAS = new Uint8Array([0x47, 0x56, 0x41, 0x53]);
-    type = "HeaderProperty";
+    type = 'HeaderProperty';
 
     constructor(savReader) {
         savReader.skipBytes(HeaderProperty.GVAS.length);
@@ -13,7 +13,7 @@ class HeaderProperty {
             this.ue5 = savReader.readInt32();
         }
 
-        this.engineVersion = savReader.readInt16() + "." + savReader.readInt16() + "." + savReader.readInt16();
+        this.engineVersion = savReader.readInt16() + '.' + savReader.readInt16() + '.' + savReader.readInt16();
         this.engineBuild = savReader.readUInt32();
         this.engineBranch = savReader.readString();
 
@@ -30,31 +30,29 @@ class HeaderProperty {
     }
 
     toBytes() {
+        const writer = new SavWriter();
 
+        writer.writeArray(HeaderProperty.GVAS);
+        writer.writeInt32(this.saveGameVersion);
+        writer.writeInt32(this.packageVersion);
+        if (typeof this.ue5 !== 'undefined') writer.writeInt32(this.ue5);
 
-        let resultArray = new Uint8Array([
-            ...HeaderProperty.GVAS,
-            ...writeInt32(this.saveGameVersion),
-            ...writeInt32(this.packageVersion),
-            ...(typeof this.ue5 !== 'undefined' ? writeInt32(this.ue5) : []),
-            ...writeInt16(this.engineVersion.split(".")[0]),
-            ...writeInt16(this.engineVersion.split(".")[1]),
-            ...writeInt16(this.engineVersion.split(".")[2]),
-            ...writeUint32(this.engineBuild),
-            ...writeString(this.engineBranch),
-            ...writeInt32(this.customVersionFormat),
-            ...writeInt32(this.customVersions.length)
-        ]);
+        const [major, minor, patch] = this.engineVersion.split('.');
+        writer.writeInt16(major);
+        writer.writeInt16(minor);
+        writer.writeInt16(patch);
+        writer.writeUInt32(this.engineBuild);
+        writer.writeString(this.engineBranch);
+        writer.writeInt32(this.customVersionFormat);
+        writer.writeInt32(this.customVersions.length);
 
-        for (let i = 0; i < this.customVersions.length; i++) {
-            resultArray = new Uint8Array([...resultArray,
-                ...writeBytes(this.customVersions[i][0]),
-                ...writeInt32(this.customVersions[i][1])
-            ]);
+        for (const [key, value] of this.customVersions) {
+            writer.writeHex(key);
+            writer.writeInt32(value);
         }
 
-        resultArray = new Uint8Array([...resultArray, ...writeString(this.saveGameClassName)]);
-        return resultArray;
+        writer.writeString(this.saveGameClassName);
+        return writer.result;
     }
 }
 

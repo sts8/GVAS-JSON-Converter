@@ -1,9 +1,9 @@
-import {writeString, writeUint32, writeInt64, writeFloat64, writeBytes} from "../value-writer.js";
-import {assignPrototype} from "../converter.js";
+import SavWriter from '../sav-writer.js';
+import {assignPrototype} from '../converter.js';
 
 class StructProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = "StructProperty";
+    type = 'StructProperty';
 
     constructor(name, savReader) {
         this.name = name;
@@ -16,18 +16,18 @@ class StructProperty {
 
         const contentEndPosition = savReader.offset + contentSize;
 
-        if (this.subtype === "Guid") {
+        if (this.subtype === 'Guid') {
             this.value = savReader.readBytes(16);
             return this;
         }
 
-        if (this.subtype === "DateTime") {
+        if (this.subtype === 'DateTime') {
             this.value = savReader.readInt64();
             return this;
         }
 
-        if (this.subtype === "Vector2D") {
-            this.value = "(" + savReader.readFloat64() + "/" + savReader.readFloat64() + ")";
+        if (this.subtype === 'Vector2D') {
+            this.value = '(' + savReader.readFloat64() + '/' + savReader.readFloat64() + ')';
             return this;
         }
 
@@ -39,73 +39,63 @@ class StructProperty {
     }
 
     toBytes() {
+        const writer = new SavWriter();
 
-
-        if (this.subtype === "Guid") {
-            return new Uint8Array([
-                ...writeString(this.name),
-                ...writeString(this.type),
-                ...writeUint32(16),
-                ...StructProperty.padding,
-                ...writeString("Guid"),
-                ...writeBytes(this.guid + "00"),
-                ...writeBytes(this.value)
-            ]);
+        if (this.subtype === 'Guid') {
+            writer.writeString(this.name);
+            writer.writeString(this.type);
+            writer.writeUInt32(16);
+            writer.writeArray(StructProperty.padding);
+            writer.writeString('Guid');
+            writer.writeHex(this.guid + '00');
+            writer.writeHex(this.value);
+            return writer.result;
         }
 
-        if (this.subtype === "DateTime") {
-            return new Uint8Array([
-                ...writeString(this.name),
-                ...writeString(this.type),
-                ...writeUint32(8),
-                ...StructProperty.padding,
-                ...writeString("DateTime"),
-                ...writeBytes(this.guid + "00"),
-                ...writeInt64(this.value)
-            ]);
+        if (this.subtype === 'DateTime') {
+            writer.writeString(this.name);
+            writer.writeString(this.type);
+            writer.writeUInt32(8);
+            writer.writeArray(StructProperty.padding);
+            writer.writeString('DateTime');
+            writer.writeHex(this.guid + '00');
+            writer.writeInt64(this.value);
+            return writer.result;
         }
 
-        if (this.subtype === "Vector2D") {
-            const vector = this.value.slice(1, -1).split("/");
-            const x = vector[0];
-            const y = vector[1];
-
-            return new Uint8Array([
-                ...writeString(this.name),
-                ...writeString(this.type),
-                ...writeUint32(16),
-                ...StructProperty.padding,
-                ...writeString("Vector2D"),
-                ...writeBytes(this.guid + "00"),
-                ...writeFloat64(x),
-                ...writeFloat64(y)
-            ]);
+        if (this.subtype === 'Vector2D') {
+            const [x, y] = this.value.slice(1, -1).split('/');
+            writer.writeString(this.name);
+            writer.writeString(this.type);
+            writer.writeUInt32(16);
+            writer.writeArray(StructProperty.padding);
+            writer.writeString('Vector2D');
+            writer.writeHex(this.guid + '00');
+            writer.writeFloat64(x);
+            writer.writeFloat64(y);
+            return writer.result;
         }
 
-        let contentBytes = new Uint8Array(0);
-
+        const contentWriter = new SavWriter();
         for (let i = 0; i < this.value.length; i++) {
-
             if (Array.isArray(this.value[i])) {
-
                 for (let j = 0; j < this.value[i].length; j++) {
-                    contentBytes = new Uint8Array([...contentBytes, ...assignPrototype(this.value[i][j]).toBytes()]);
+                    contentWriter.writeArray(assignPrototype(this.value[i][j]).toBytes());
                 }
-
             } else {
-                contentBytes = new Uint8Array([...contentBytes, ...assignPrototype(this.value[i]).toBytes()]);
+                contentWriter.writeArray(assignPrototype(this.value[i]).toBytes());
             }
         }
+        const content = contentWriter.result;
 
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...writeUint32(contentBytes.length),
-            ...StructProperty.padding,
-            ...writeString(this.subtype),
-            ...writeBytes(this.guid + "00"),
-            ...contentBytes
-        ]);
+        writer.writeString(this.name);
+        writer.writeString(this.type);
+        writer.writeUInt32(content.length);
+        writer.writeArray(StructProperty.padding);
+        writer.writeString(this.subtype);
+        writer.writeHex(this.guid + '00');
+        writer.writeArray(content);
+        return writer.result;
     }
 }
 

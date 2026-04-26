@@ -19,7 +19,7 @@ export default class SavWriter {
     }
 
     writeString(string) {
-        if (string === "") {
+        if (string === '') {
             this.#ensure(4);
             this.dataView.setUint32(this.offset, 0, true);
             this.offset += 4;
@@ -50,6 +50,12 @@ export default class SavWriter {
         this.array[this.offset++] = bool ? 0x01 : 0x00;
     }
 
+    writeInt16(value) {
+        this.#ensure(2);
+        this.dataView.setInt16(this.offset, value, true);
+        this.offset += 2;
+    }
+
     writeInt32(value) {
         this.#ensure(4);
         this.dataView.setInt32(this.offset, value, true);
@@ -74,6 +80,21 @@ export default class SavWriter {
         this.offset += 4;
     }
 
+    writeFloat64(value) {
+        this.#ensure(8);
+        this.dataView.setFloat64(this.offset, value, true);
+        this.offset += 8;
+    }
+
+    // https://stackoverflow.com/a/50868276
+    writeHex(hexString) {
+        const pairs = hexString.match(/../g);
+        this.#ensure(pairs.length);
+        for (let i = 0; i < pairs.length; i++) {
+            this.array[this.offset++] = parseInt(pairs[i], 16);
+        }
+    }
+
     writeGuid(string) {
         const quarters = [
             string.slice(0, 8),
@@ -87,30 +108,13 @@ export default class SavWriter {
         });
 
         const hexString = reversedQuarters.join('').toUpperCase();
-        this.writeArray(hexString.match(/../g).map((byte) => parseInt(byte, 16)));
+        this.writeHex(hexString);
     }
-
-    // currently, JS does not support Date objects as precise as ticks
-//
-// function writeDateTime(dateTimeString) {
-//     const date = new Date(dateTimeString);
-//     const array = new Uint8Array(8);
-//     const ticks = (BigInt(date.getTime()) * 10000n) + 621355968000000000n;
-//
-//     new DataView(array.buffer).setBigInt64(0, ticks, true);
-//
-//     return array;
-// }
-
-    // // https://stackoverflow.com/a/50868276
-    // function writeBytes(hexString) {
-    //     return Uint8Array.from(hexString.match(/../g).map((byte) => parseInt(byte, 16)));
-    // }
 
 }
 
 export function getStringByteSize(string) {
-    if (string === "") {
+    if (string === '') {
         return 4;
     }
 

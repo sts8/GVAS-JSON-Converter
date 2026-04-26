@@ -1,10 +1,10 @@
-import NoneProperty from "./NoneProperty.js";
-import {writeBytes, writeInt32, writeFloat32, writeString, writeUint32} from "../value-writer.js";
-import {assignPrototype} from "../converter.js";
+import NoneProperty from './NoneProperty.js';
+import SavWriter from '../sav-writer.js';
+import {assignPrototype} from '../converter.js';
 
 class MapProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = "MapProperty";
+    type = 'MapProperty';
 
     constructor(name, savReader) {
         this.name = name;
@@ -24,25 +24,25 @@ class MapProperty {
             let currentValue = null;
 
             switch (this.keyType) {
-                case "StructProperty":
+                case 'StructProperty':
                     currentKey = savReader.readBytes(16);
                     break;
 
-                case "IntProperty":
+                case 'IntProperty':
                     currentKey = savReader.readInt32();
                     break;
 
-                case "StrProperty":
+                case 'StrProperty':
                     currentKey = savReader.readString();
                     break;
 
                 default:
-                    throw new Error("Key Type not implemented: " + this.keyType);
+                    throw new Error('Key Type not implemented: ' + this.keyType);
             }
 
             switch (this.valueType) {
 
-                case "StructProperty":
+                case 'StructProperty':
                     currentValue = [];
                     let prop = null;
 
@@ -52,105 +52,88 @@ class MapProperty {
                     }
                     break;
 
-                case "IntProperty":
+                case 'IntProperty':
                     currentValue = savReader.readInt32();
                     break;
 
-                case "FloatProperty":
+                case 'FloatProperty':
                     currentValue = savReader.readFloat32();
                     break;
 
-                case "BoolProperty":
+                case 'BoolProperty':
                     currentValue = savReader.readBoolean();
                     break;
 
-                case "StrProperty":
+                case 'StrProperty':
                     currentValue = savReader.readString();
                     break;
 
                 default:
-                    throw new Error("Value Type not implemented: " + this.valueType);
+                    throw new Error('Value Type not implemented: ' + this.valueType);
             }
 
             tempMap.set(currentKey, currentValue);
-
         }
 
         this.value = Array.from(tempMap.entries());
     }
 
     toBytes() {
-
-
-        let byteArrayContent = new Uint8Array(0);
-
+        const contentWriter = new SavWriter();
         const tempMap = new Map(this.value);
 
-        for (let [currentKey, currentValue] of tempMap) {
+        for (const [currentKey, currentValue] of tempMap) {
 
             switch (this.keyType) {
-                case "StructProperty":
-                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeBytes(currentKey)]);
+                case 'StructProperty':
+                    contentWriter.writeHex(currentKey);
                     break;
-
-                case "IntProperty":
-                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeInt32(currentKey)]);
+                case 'IntProperty':
+                    contentWriter.writeInt32(currentKey);
                     break;
-
-                case "StrProperty":
-                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(currentKey)]);
+                case 'StrProperty':
+                    contentWriter.writeString(currentKey);
                     break;
-
                 default:
-                    throw new Error("Key Type not implemented: " + this.keyType);
+                    throw new Error('Key Type not implemented: ' + this.keyType);
             }
 
             switch (this.valueType) {
-
-                case "StructProperty":
+                case 'StructProperty':
                     for (let i = 0; i < currentValue.length; i++) {
-                        byteArrayContent = new Uint8Array([...byteArrayContent, ...assignPrototype(currentValue[i]).toBytes()]);
+                        contentWriter.writeArray(assignPrototype(currentValue[i]).toBytes());
                     }
                     break;
-
-                case "IntProperty":
-                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeInt32(currentValue)]);
+                case 'IntProperty':
+                    contentWriter.writeInt32(currentValue);
                     break;
-
-                case "FloatProperty":
-                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeFloat32(currentValue)]);
+                case 'FloatProperty':
+                    contentWriter.writeFloat32(currentValue);
                     break;
-
-                case "StrProperty":
-                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(currentValue)]);
+                case 'StrProperty':
+                    contentWriter.writeString(currentValue);
                     break;
-
-                case "BoolProperty":
-                    if (currentValue === true) {
-                        byteArrayContent = new Uint8Array([...byteArrayContent, 0x01]);
-                    } else {
-                        byteArrayContent = new Uint8Array([...byteArrayContent, 0x00]);
-                    }
+                case 'BoolProperty':
+                    contentWriter.writeByte(currentValue ? 0x01 : 0x00);
                     break;
-
                 default:
-                    throw new Error("Value Type not implemented: " + this.valueType);
+                    throw new Error('Value Type not implemented: ' + this.valueType);
             }
-
         }
 
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...writeUint32(4 + 4 + byteArrayContent.length),
-            ...MapProperty.padding,
-            ...writeString(this.keyType),
-            ...writeString(this.valueType),
-            ...MapProperty.padding,
-            0x00,
-            ...writeUint32(tempMap.size),
-            ...byteArrayContent
-        ]);
+        const content = contentWriter.result;
+        const writer = new SavWriter();
+        writer.writeString(this.name);
+        writer.writeString(this.type);
+        writer.writeUInt32(4 + 4 + content.length);
+        writer.writeArray(MapProperty.padding);
+        writer.writeString(this.keyType);
+        writer.writeString(this.valueType);
+        writer.writeArray(MapProperty.padding);
+        writer.writeByte(0x00);
+        writer.writeUInt32(tempMap.size);
+        writer.writeArray(content);
+        return writer.result;
     }
 }
 

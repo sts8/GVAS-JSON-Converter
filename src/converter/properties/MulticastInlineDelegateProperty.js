@@ -1,11 +1,11 @@
-import SavWriter, {getStringByteSize} from "../sav-writer.js";
+import SavWriter, {getStringByteSize} from '../sav-writer.js';
 
 class MulticastInlineDelegateProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = "MulticastInlineDelegateProperty";
+        this.type = 'MulticastInlineDelegateProperty';
         savReader.skipBytes(8); // contains content size + padding
 
         this.hasGuid = savReader.readBoolean();
@@ -49,7 +49,6 @@ class MulticastInlineDelegateProperty {
         }
     }
 
-    // backwards compatibility
     toBytes() {
         const savWriter = new SavWriter();
         this.write(savWriter);

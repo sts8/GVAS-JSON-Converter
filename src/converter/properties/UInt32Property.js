@@ -1,11 +1,11 @@
-import SavWriter from "../sav-writer.js";
+import SavWriter from '../sav-writer.js';
 
 class UInt32Property {
     static SIZE_FOUR = [0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = "UInt32Property";
+        this.type = 'UInt32Property';
         savReader.skipBytes(8); // contains value size
 
         this.hasGuid = savReader.readBoolean();
@@ -29,7 +29,6 @@ class UInt32Property {
         savWriter.writeUInt32(this.value);
     }
 
-    // backwards compatibility
     toBytes() {
         const savWriter = new SavWriter();
         this.write(savWriter);

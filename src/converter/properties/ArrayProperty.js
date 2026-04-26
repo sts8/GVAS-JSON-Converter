@@ -1,10 +1,10 @@
-import NoneProperty from "./NoneProperty.js";
-import {writeBytes, writeString, writeUint32} from "../value-writer.js";
-import {assignPrototype} from "../converter.js";
+import NoneProperty from './NoneProperty.js';
+import SavWriter from '../sav-writer.js';
+import {assignPrototype} from '../converter.js';
 
 class ArrayProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = "ArrayProperty";
+    type = 'ArrayProperty';
 
     constructor(name, savReader) {
         this.name = name;
@@ -14,7 +14,7 @@ class ArrayProperty {
         savReader.skipBytes(1);
 
         switch (this.subtype) {
-            case "StructProperty":
+            case 'StructProperty':
                 const contentCount = savReader.readUInt32();
 
                 const nameAgain = savReader.readString();
@@ -34,23 +34,20 @@ class ArrayProperty {
                 this.value = [];
 
                 switch (this.genericType) {
-                    case "Guid":
+                    case 'Guid':
                         for (let i = 0; i < contentCount; i++) {
                             this.value.push(savReader.readBytes(16));
                         }
                         break;
 
                     default:
-
                         for (let i = 0; i < contentCount; i++) {
                             const structElementInstance = [];
-
                             let structElementInstanceChildProperty = null;
 
                             while (!(structElementInstanceChildProperty instanceof NoneProperty)) {
                                 structElementInstanceChildProperty = savReader.readProperty();
                                 structElementInstance.push(structElementInstanceChildProperty);
-
                             }
 
                             this.value.push(structElementInstance);
@@ -59,7 +56,7 @@ class ArrayProperty {
 
                 break;
 
-            case "NameProperty":
+            case 'NameProperty':
                 const numberOfArrayElements = savReader.readUInt32();
                 this.value = [];
 
@@ -75,94 +72,90 @@ class ArrayProperty {
     }
 
     toBytes() {
-
-
         const contentCount = this.value.length;
-        let byteArrayContent = new Uint8Array(0);
-
-        let contentSize;
+        const writer = new SavWriter();
 
         switch (this.subtype) {
-            case "StructProperty":
+            case 'StructProperty': {
+                const contentWriter = new SavWriter();
 
                 switch (this.genericType) {
-                    case "Guid":
+                    case 'Guid':
                         for (let i = 0; i < contentCount; i++) {
-                            byteArrayContent = new Uint8Array([...byteArrayContent, ...writeBytes(this.value[i])]);
+                            contentWriter.writeHex(this.value[i]);
                         }
                         break;
 
                     default:
                         for (let i = 0; i < contentCount; i++) {
-
                             if (Array.isArray(this.value[i])) {
                                 for (let j = 0; j < this.value[i].length; j++) {
-                                    byteArrayContent = new Uint8Array([...byteArrayContent, ...assignPrototype(this.value[i][j]).toBytes()]);
+                                    contentWriter.writeArray(assignPrototype(this.value[i][j]).toBytes());
                                 }
                             } else {
-                                byteArrayContent = new Uint8Array([...byteArrayContent, ...assignPrototype(this.value[i]).toBytes()]);
+                                contentWriter.writeArray(assignPrototype(this.value[i]).toBytes());
                             }
                         }
                 }
 
-                contentSize =
+                const content = contentWriter.result;
+                const contentSize =
                     4
                     + 4 + this.name.length + 1
                     + 4 + this.subtype.length + 1
                     + 4
                     + ArrayProperty.padding.length
                     + 4 + this.genericType.length + 1
-                    + 16 + 1 // guid
-                    + byteArrayContent.length;
+                    + 16 + 1
+                    + content.length;
 
-                return new Uint8Array([
-                    ...writeString(this.name),
-                    ...writeString(this.type),
-                    ...writeUint32(contentSize),
-                    ...ArrayProperty.padding,
-                    ...writeString(this.subtype),
-                    0x00, // --- contentSize content below ---
-                    ...writeUint32(contentCount),
-                    ...writeString(this.name),
-                    ...writeString(this.subtype),
-                    ...writeUint32(byteArrayContent.length),
-                    ...ArrayProperty.padding,
-                    ...writeString(this.genericType),
-                    ...writeBytes(this.guid + "00"),
-                    ...byteArrayContent
-                ]);
+                writer.writeString(this.name);
+                writer.writeString(this.type);
+                writer.writeUInt32(contentSize);
+                writer.writeArray(ArrayProperty.padding);
+                writer.writeString(this.subtype);
+                writer.writeByte(0x00);
+                writer.writeUInt32(contentCount);
+                writer.writeString(this.name);
+                writer.writeString(this.subtype);
+                writer.writeUInt32(content.length);
+                writer.writeArray(ArrayProperty.padding);
+                writer.writeString(this.genericType);
+                writer.writeHex(this.guid + '00');
+                writer.writeArray(content);
+                return writer.result;
+            }
 
-            case "NameProperty":
-
-                contentSize = 4;
-
+            case 'NameProperty': {
+                const contentWriter = new SavWriter();
+                let contentSize = 4;
                 for (let i = 0; i < contentCount; i++) {
-                    byteArrayContent = new Uint8Array([...byteArrayContent, ...writeString(this.value[i])]);
+                    contentWriter.writeString(this.value[i]);
                     contentSize += 4 + this.value[i].length + 1;
                 }
 
-                return new Uint8Array([
-                    ...writeString(this.name),
-                    ...writeString(this.type),
-                    ...writeUint32(contentSize),
-                    ...ArrayProperty.padding,
-                    ...writeString(this.subtype),
-                    0x00, // --- contentSize content below ---
-                    ...writeUint32(contentCount),
-                    ...byteArrayContent
-                ]);
+                writer.writeString(this.name);
+                writer.writeString(this.type);
+                writer.writeUInt32(contentSize);
+                writer.writeArray(ArrayProperty.padding);
+                writer.writeString(this.subtype);
+                writer.writeByte(0x00);
+                writer.writeUInt32(contentCount);
+                writer.writeArray(contentWriter.result);
+                return writer.result;
+            }
 
-            default:
-                contentSize = this.value.length / 2;
-                return new Uint8Array([
-                    ...writeString(this.name),
-                    ...writeString(this.type),
-                    ...writeUint32(contentSize),
-                    ...ArrayProperty.padding,
-                    ...writeString(this.subtype),
-                    0x00, // --- contentSize content below ---
-                    ...writeBytes(this.value)
-                ]);
+            default: {
+                const contentSize = this.value.length / 2;
+                writer.writeString(this.name);
+                writer.writeString(this.type);
+                writer.writeUInt32(contentSize);
+                writer.writeArray(ArrayProperty.padding);
+                writer.writeString(this.subtype);
+                writer.writeByte(0x00);
+                writer.writeHex(this.value);
+                return writer.result;
+            }
         }
     }
 }

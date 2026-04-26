@@ -1,8 +1,8 @@
-import {writeBytes, writeString, writeUint32} from "../value-writer.js";
+import SavWriter from '../sav-writer.js';
 
 class SetProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = "SetProperty";
+    type = 'SetProperty';
 
     constructor(name, savReader) {
         this.name = name;
@@ -11,10 +11,8 @@ class SetProperty {
         this.subtype = savReader.readString();
         savReader.skipBytes(1);
 
-        if (this.subtype === "StructProperty") {
-
+        if (this.subtype === 'StructProperty') {
             savReader.skipBytes(4); // padding
-
             const contentCount = savReader.readUInt32();
             this.value = [];
             for (let i = 0; i < contentCount; i++) {
@@ -27,39 +25,37 @@ class SetProperty {
     }
 
     toBytes() {
+        const writer = new SavWriter();
 
-
-        if (this.subtype === "StructProperty") {
-
+        if (this.subtype === 'StructProperty') {
             const contentCount = this.value.length;
-            let byteArrayContent = new Uint8Array(0);
 
+            const contentWriter = new SavWriter();
             for (let i = 0; i < contentCount; i++) {
-                byteArrayContent = new Uint8Array([...byteArrayContent, ...writeBytes(this.value[i])]);
+                contentWriter.writeHex(this.value[i]);
             }
+            const content = contentWriter.result;
 
-            return new Uint8Array([
-                ...writeString(this.name),
-                ...writeString(this.type),
-                ...writeUint32(4 + 4 + byteArrayContent.length),
-                ...SetProperty.padding,
-                ...writeString(this.subtype),
-                0x00,
-                ...SetProperty.padding,
-                ...writeUint32(contentCount),
-                ...byteArrayContent
-            ]);
+            writer.writeString(this.name);
+            writer.writeString(this.type);
+            writer.writeUInt32(4 + 4 + content.length);
+            writer.writeArray(SetProperty.padding);
+            writer.writeString(this.subtype);
+            writer.writeByte(0x00);
+            writer.writeArray(SetProperty.padding);
+            writer.writeUInt32(contentCount);
+            writer.writeArray(content);
+            return writer.result;
         }
 
-        return new Uint8Array([
-            ...writeString(this.name),
-            ...writeString(this.type),
-            ...writeUint32(this.value.length / 2),
-            ...SetProperty.padding,
-            ...writeString(this.subtype),
-            0x00,
-            ...writeBytes(this.value)
-        ]);
+        writer.writeString(this.name);
+        writer.writeString(this.type);
+        writer.writeUInt32(this.value.length / 2);
+        writer.writeArray(SetProperty.padding);
+        writer.writeString(this.subtype);
+        writer.writeByte(0x00);
+        writer.writeHex(this.value);
+        return writer.result;
     }
 }
 

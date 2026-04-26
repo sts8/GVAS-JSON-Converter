@@ -1,11 +1,11 @@
-import SavWriter from "../sav-writer.js";
+import SavWriter from '../sav-writer.js';
 
 class BoolProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = "BoolProperty";
+        this.type = 'BoolProperty';
         savReader.skipBytes(8); // contains padding
 
         this.value = savReader.readBoolean();
@@ -29,9 +29,7 @@ class BoolProperty {
         }
     }
 
-    // backwards compatibility
     toBytes() {
-
         const savWriter = new SavWriter();
         this.write(savWriter);
         return savWriter.result;

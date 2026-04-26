@@ -1,11 +1,11 @@
-import SavWriter from "../sav-writer.js";
+import SavWriter from '../sav-writer.js';
 
 class ByteProperty {
     static SIZE_ONE = [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = "ByteProperty";
+        this.type = 'ByteProperty';
         savReader.skipBytes(8); // contains UNKNOWN
 
         this.subtype = savReader.readString();
@@ -32,7 +32,6 @@ class ByteProperty {
         savWriter.writeByte(this.value);
     }
 
-    // backwards compatibility
     toBytes() {
         const savWriter = new SavWriter();
         this.write(savWriter);

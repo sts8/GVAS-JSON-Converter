@@ -1,11 +1,11 @@
-import {writeString, writeFloat32} from "../value-writer.js";
+import SavWriter from '../sav-writer.js';
 
 class FloatProperty {
     static padding = new Uint8Array([
         0x04, // ?
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     ]);
-    type = "FloatProperty";
+    type = 'FloatProperty';
 
     constructor(name, savReader) {
         this.name = name;
@@ -14,34 +14,12 @@ class FloatProperty {
     }
 
     toBytes() {
-
-
-        const nameBytes = writeString(this.name);
-        const typeBytes = writeString(this.type);
-        const paddingBytes = FloatProperty.padding;
-        const valueBytes = writeFloat32(this.value);
-
-        const totalLength =
-            nameBytes.length +
-            typeBytes.length +
-            paddingBytes.length +
-            valueBytes.length;
-
-        const output = new Uint8Array(totalLength);
-
-        let offset = 0;
-        output.set(nameBytes, offset);
-        offset += nameBytes.length;
-
-        output.set(typeBytes, offset);
-        offset += typeBytes.length;
-
-        output.set(paddingBytes, offset);
-        offset += paddingBytes.length;
-
-        output.set(valueBytes, offset);
-
-        return output;
+        const writer = new SavWriter();
+        writer.writeString(this.name);
+        writer.writeString(this.type);
+        writer.writeArray(FloatProperty.padding);
+        writer.writeFloat32(this.value);
+        return writer.result;
     }
 }
 

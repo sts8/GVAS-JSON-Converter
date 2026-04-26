@@ -1,9 +1,7 @@
-// copied StrProperty
-
-import {writeString, writeUint32} from "../value-writer.js";
+import SavWriter from '../sav-writer.js';
 
 class NameProperty {
-    type = "NameProperty";
+    type = 'NameProperty';
 
     constructor(name, savReader) {
         this.name = name;
@@ -12,45 +10,14 @@ class NameProperty {
     }
 
     toBytes() {
-
-
-        const nameBytes = writeString(this.name);
-        const typeBytes = writeString(this.type);
-        const valueBytes = writeString(this.value);
-        const contentLengthBytes = writeUint32(valueBytes.length);
-
-        const padding = new Uint8Array(4); // 0x00, 0x00, 0x00, 0x00
-        const contentStartMarker = new Uint8Array([0x00]);
-
-        const totalLength =
-            nameBytes.length +
-            typeBytes.length +
-            contentLengthBytes.length +
-            padding.length +
-            contentStartMarker.length +
-            valueBytes.length;
-
-        const result = new Uint8Array(totalLength);
-        let offset = 0;
-
-        result.set(nameBytes, offset);
-        offset += nameBytes.length;
-
-        result.set(typeBytes, offset);
-        offset += typeBytes.length;
-
-        result.set(contentLengthBytes, offset);
-        offset += contentLengthBytes.length;
-
-        result.set(padding, offset);
-        offset += padding.length;
-
-        result.set(contentStartMarker, offset);
-        offset += contentStartMarker.length;
-
-        result.set(valueBytes, offset);
-
-        return result;
+        const writer = new SavWriter();
+        writer.writeString(this.name);
+        writer.writeString(this.type);
+        writer.writeUInt32(4 + this.value.length + 1);
+        writer.writeUInt32(0); // padding
+        writer.writeByte(0x00); // content start marker
+        writer.writeString(this.value);
+        return writer.result;
     }
 }
 
