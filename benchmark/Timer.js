@@ -1,5 +1,3 @@
-const {performance} = require('perf_hooks');
-
 class Timer {
     constructor() {
         this.start = performance.now();
@@ -44,4 +42,4 @@ class Timer {
     }
 }
 
-module.exports = Timer;
+export default Timer;
