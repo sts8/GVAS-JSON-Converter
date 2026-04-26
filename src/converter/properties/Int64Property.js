@@ -3,7 +3,7 @@ class Int64Property {
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = 'Int64Property';
+        this.type = "Int64Property";
         savReader.skipBytes(8); // contains value size
 
         this.hasGuid = savReader.readBoolean();
@@ -26,7 +26,6 @@ class Int64Property {
 
         savWriter.writeInt64(this.value);
     }
-
 
 }
 

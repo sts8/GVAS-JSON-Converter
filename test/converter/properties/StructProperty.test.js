@@ -1,10 +1,10 @@
-import {expect, test} from 'vitest';
+import {expect, test} from "vitest";
 
-import SavReader from '../../../src/converter/sav-reader.js';
-import SavWriter from '../../../src/converter/sav-writer.js';
-import StructProperty from '../../../src/converter/properties/StructProperty.js';
+import SavReader from "../../../src/converter/sav-reader.js";
+import SavWriter from "../../../src/converter/sav-writer.js";
+import StructProperty from "../../../src/converter/properties/StructProperty.js";
 
-test('StructProperty - DateTime', () => {
+test("StructProperty - DateTime", () => {
 
     const bytes = new Uint8Array([
         /* name length (9) */         0x09, 0x00, 0x00, 0x00,
@@ -30,15 +30,15 @@ test('StructProperty - DateTime', () => {
 
     const someStructProperty = new SavReader(bytes).readProperty();
     expect(someStructProperty).toBeInstanceOf(StructProperty);
-    expect(someStructProperty.name).toBe('SaveTime');
-    expect(someStructProperty.subtype).toBe('DateTime');
+    expect(someStructProperty.name).toBe("SaveTime");
+    expect(someStructProperty.subtype).toBe("DateTime");
     expect(someStructProperty.value).toBe(638264314203090000n);
     const writer = new SavWriter();
     someStructProperty.write(writer);
     expect(writer.result).toStrictEqual(bytes);
 });
 
-test('StructProperty - DateTime 2', () => {
+test("StructProperty - DateTime 2", () => {
 
     const bytes = new Uint8Array([
         0x09, 0x00, 0x00, 0x00,
@@ -64,8 +64,8 @@ test('StructProperty - DateTime 2', () => {
 
     const someStructProperty = new SavReader(bytes).readProperty();
     expect(someStructProperty).toBeInstanceOf(StructProperty);
-    expect(someStructProperty.name).toBe('GameTime');
-    expect(someStructProperty.subtype).toBe('DateTime');
+    expect(someStructProperty.name).toBe("GameTime");
+    expect(someStructProperty.subtype).toBe("DateTime");
     expect(someStructProperty.value).toBe(189556562872n);
     const writer = new SavWriter();
     someStructProperty.write(writer);

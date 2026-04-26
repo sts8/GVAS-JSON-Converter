@@ -1,6 +1,6 @@
 class ObjectProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00, 0x00]);
-    type = 'ObjectProperty';
+    type = "ObjectProperty";
 
     constructor(name, savReader) {
         this.name = name;

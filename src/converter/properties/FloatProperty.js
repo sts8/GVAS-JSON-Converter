@@ -3,7 +3,7 @@ class FloatProperty {
         0x04, // ?
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     ]);
-    type = 'FloatProperty';
+    type = "FloatProperty";
 
     constructor(name, savReader) {
         this.name = name;

@@ -3,7 +3,7 @@ class BoolProperty {
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = 'BoolProperty';
+        this.type = "BoolProperty";
         savReader.skipBytes(8); // contains padding
 
         this.value = savReader.readBoolean();

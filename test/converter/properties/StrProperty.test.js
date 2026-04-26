@@ -1,10 +1,10 @@
-import {expect, test} from 'vitest';
+import {expect, test} from "vitest";
 
-import SavReader from '../../../src/converter/sav-reader.js';
-import StrProperty from '../../../src/converter/properties/StrProperty.js';
-import SavWriter from '../../../src/converter/sav-writer.js';
+import SavReader from "../../../src/converter/sav-reader.js";
+import StrProperty from "../../../src/converter/properties/StrProperty.js";
+import SavWriter from "../../../src/converter/sav-writer.js";
 
-test('StrProperty', () => {
+test("StrProperty", () => {
     const data = new Uint8Array([
         /* name length (13) */      0x0D, 0x00, 0x00, 0x00,
         /* name ("TutorialName") */ 0x54, 0x75, 0x74, 0x6F, 0x72, 0x69, 0x61, 0x6C, 0x4E, 0x61, 0x6D, 0x65, 0x00,
@@ -30,8 +30,8 @@ test('StrProperty', () => {
 
     const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(StrProperty);
-    expect(property.name).toBe('TutorialName');
-    expect(property.value).toBe('Tutorial_Hint_PlagueWarning_SporeTowerCleaning_Bosco');
+    expect(property.name).toBe("TutorialName");
+    expect(property.value).toBe("Tutorial_Hint_PlagueWarning_SporeTowerCleaning_Bosco");
 
     const writer = new SavWriter();
     property.write(writer);

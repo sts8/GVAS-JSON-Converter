@@ -3,7 +3,7 @@ class UInt32Property {
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = 'UInt32Property';
+        this.type = "UInt32Property";
         savReader.skipBytes(8); // contains value size
 
         this.hasGuid = savReader.readBoolean();

@@ -1,18 +1,18 @@
-import {convertJsonToSav, convertSavToJson} from '../converter/converter.js';
+import {convertJsonToSav, convertSavToJson} from "../converter/converter.js";
 
 function downloadJson(filename, jsonString) {
-    const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonString));
-    element.setAttribute('download', filename);
+    const element = document.createElement("a");
+    element.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(jsonString));
+    element.setAttribute("download", filename);
     element.click();
 }
 
 function downloadSav(filename, savArrayBuffer) {
-    const blob = new Blob([savArrayBuffer], {type: 'octet/stream'});
+    const blob = new Blob([savArrayBuffer], {type: "octet/stream"});
 
-    const element = document.createElement('a');
-    element.setAttribute('href', window.URL.createObjectURL(blob));
-    element.setAttribute('download', filename);
+    const element = document.createElement("a");
+    element.setAttribute("href", window.URL.createObjectURL(blob));
+    element.setAttribute("download", filename);
     element.click();
 }
 
@@ -21,7 +21,7 @@ function loadSavFile() {
     fileReader.fileName = this.files[0].name;
 
     fileReader.onload = function (e) {
-        downloadJson(fileReader.fileName + '.json', convertSavToJson(new Uint8Array(e.target.result)));
+        downloadJson(fileReader.fileName + ".json", convertSavToJson(new Uint8Array(e.target.result)));
     };
 
     fileReader.readAsArrayBuffer(this.files[0]);
@@ -32,12 +32,12 @@ function loadJsonFile() {
     fileReader.fileName = this.files[0].name;
 
     fileReader.onload = function (e) {
-        downloadSav(fileReader.fileName + '.sav', convertJsonToSav(e.target.result));
+        downloadSav(fileReader.fileName + ".sav", convertJsonToSav(e.target.result));
     };
 
     fileReader.readAsText(this.files[0]);
 }
 
-document.getElementById('sav-input').addEventListener('change', loadSavFile);
-document.getElementById('json-input').addEventListener('change', loadJsonFile);
-document.getElementById('build-info').textContent = `${__COMMIT_HASH__} · ${__BUILD_TIME__}`;
+document.getElementById("sav-input").addEventListener("change", loadSavFile);
+document.getElementById("json-input").addEventListener("change", loadJsonFile);
+document.getElementById("build-info").textContent = `${__COMMIT_HASH__} · ${__BUILD_TIME__}`;

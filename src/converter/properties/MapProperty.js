@@ -1,10 +1,10 @@
-import NoneProperty from './NoneProperty.js';
-import SavWriter from '../sav-writer.js';
-import {assignPrototype} from '../converter.js';
+import NoneProperty from "./NoneProperty.js";
+import SavWriter from "../sav-writer.js";
+import {assignPrototype} from "../converter.js";
 
 class MapProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = 'MapProperty';
+    type = "MapProperty";
 
     constructor(name, savReader) {
         this.name = name;
@@ -24,25 +24,25 @@ class MapProperty {
             let currentValue = null;
 
             switch (this.keyType) {
-                case 'StructProperty':
+                case "StructProperty":
                     currentKey = savReader.readBytes(16);
                     break;
 
-                case 'IntProperty':
+                case "IntProperty":
                     currentKey = savReader.readInt32();
                     break;
 
-                case 'StrProperty':
+                case "StrProperty":
                     currentKey = savReader.readString();
                     break;
 
                 default:
-                    throw new Error('Key Type not implemented: ' + this.keyType);
+                    throw new Error("Key Type not implemented: " + this.keyType);
             }
 
             switch (this.valueType) {
 
-                case 'StructProperty':
+                case "StructProperty":
                     currentValue = [];
                     let prop = null;
 
@@ -52,24 +52,24 @@ class MapProperty {
                     }
                     break;
 
-                case 'IntProperty':
+                case "IntProperty":
                     currentValue = savReader.readInt32();
                     break;
 
-                case 'FloatProperty':
+                case "FloatProperty":
                     currentValue = savReader.readFloat32();
                     break;
 
-                case 'BoolProperty':
+                case "BoolProperty":
                     currentValue = savReader.readBoolean();
                     break;
 
-                case 'StrProperty':
+                case "StrProperty":
                     currentValue = savReader.readString();
                     break;
 
                 default:
-                    throw new Error('Value Type not implemented: ' + this.valueType);
+                    throw new Error("Value Type not implemented: " + this.valueType);
             }
 
             tempMap.set(currentKey, currentValue);
@@ -85,39 +85,39 @@ class MapProperty {
         for (const [currentKey, currentValue] of tempMap) {
 
             switch (this.keyType) {
-                case 'StructProperty':
+                case "StructProperty":
                     contentWriter.writeHex(currentKey);
                     break;
-                case 'IntProperty':
+                case "IntProperty":
                     contentWriter.writeInt32(currentKey);
                     break;
-                case 'StrProperty':
+                case "StrProperty":
                     contentWriter.writeString(currentKey);
                     break;
                 default:
-                    throw new Error('Key Type not implemented: ' + this.keyType);
+                    throw new Error("Key Type not implemented: " + this.keyType);
             }
 
             switch (this.valueType) {
-                case 'StructProperty':
+                case "StructProperty":
                     for (let i = 0; i < currentValue.length; i++) {
                         assignPrototype(currentValue[i]).write(contentWriter);
                     }
                     break;
-                case 'IntProperty':
+                case "IntProperty":
                     contentWriter.writeInt32(currentValue);
                     break;
-                case 'FloatProperty':
+                case "FloatProperty":
                     contentWriter.writeFloat32(currentValue);
                     break;
-                case 'StrProperty':
+                case "StrProperty":
                     contentWriter.writeString(currentValue);
                     break;
-                case 'BoolProperty':
+                case "BoolProperty":
                     contentWriter.writeByte(currentValue ? 0x01 : 0x00);
                     break;
                 default:
-                    throw new Error('Value Type not implemented: ' + this.valueType);
+                    throw new Error("Value Type not implemented: " + this.valueType);
             }
         }
 

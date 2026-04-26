@@ -3,7 +3,7 @@ class ByteProperty {
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = 'ByteProperty';
+        this.type = "ByteProperty";
         savReader.skipBytes(8); // contains UNKNOWN
 
         this.subtype = savReader.readString();

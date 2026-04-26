@@ -1,10 +1,10 @@
-import {expect, test} from 'vitest';
+import {expect, test} from "vitest";
 
-import SavReader from '../../../src/converter/sav-reader.js';
-import SavWriter from '../../../src/converter/sav-writer.js';
-import ArrayProperty from '../../../src/converter/properties/ArrayProperty.js';
+import SavReader from "../../../src/converter/sav-reader.js";
+import SavWriter from "../../../src/converter/sav-writer.js";
+import ArrayProperty from "../../../src/converter/properties/ArrayProperty.js";
 
-test('ArrayProperty - NameProperty', () => {
+test("ArrayProperty - NameProperty", () => {
     const ArrayPropertyBytes = new Uint8Array([
         /* name length (20) */              0x14, 0x00, 0x00, 0x00,
         /* name ("CharacterPresetData") */  0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x50, 0x72, 0x65, 0x73, 0x65, 0x74, 0x44, 0x61, 0x74, 0x61, 0x00,
@@ -50,20 +50,20 @@ test('ArrayProperty - NameProperty', () => {
     const someArrayProperty = new SavReader(ArrayPropertyBytes).readProperty();
 
     expect(someArrayProperty).toBeInstanceOf(ArrayProperty);
-    expect(someArrayProperty.name).toBe('CharacterPresetData');
-    expect(someArrayProperty.subtype).toBe('NameProperty');
+    expect(someArrayProperty.name).toBe("CharacterPresetData");
+    expect(someArrayProperty.subtype).toBe("NameProperty");
     expect(someArrayProperty.value).toStrictEqual([
-        'EyebrowColorMale001',
-        'EyebrowMale005',
-        'EyeColorMale007',
-        'MarkingMale000g',
-        'MarkingMale001b',
-        'MarkingMale002c',
-        'MarkingMale003a',
-        'HairColorMale001',
-        'HairMale007',
-        'FaceMale013',
-        'SkinColorMale008'
+        "EyebrowColorMale001",
+        "EyebrowMale005",
+        "EyeColorMale007",
+        "MarkingMale000g",
+        "MarkingMale001b",
+        "MarkingMale002c",
+        "MarkingMale003a",
+        "HairColorMale001",
+        "HairMale007",
+        "FaceMale013",
+        "SkinColorMale008"
     ]);
     const writer = new SavWriter();
     someArrayProperty.write(writer);

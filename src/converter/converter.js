@@ -1,9 +1,9 @@
-import SavReader from './sav-reader.js';
-import SavWriter from './sav-writer.js';
-import * as properties from './properties/index.js';
+import SavReader from "./sav-reader.js";
+import SavWriter from "./sav-writer.js";
+import * as properties from "./properties/index.js";
 
 // https://github.com/GoogleChromeLabs/jsbi/issues/30#issuecomment-1006088574
-BigInt.prototype['toJSON'] = function () {
+BigInt.prototype["toJSON"] = function () {
     return this.toString();
 };
 
@@ -11,7 +11,7 @@ function assignPrototype(rawProperty) {
     const PropertyClass = properties[rawProperty.type];
 
     if (!PropertyClass) {
-        throw new Error('Unknown property type: ' + rawProperty.type);
+        throw new Error("Unknown property type: " + rawProperty.type);
     }
 
     const instance = Object.create(PropertyClass.prototype);

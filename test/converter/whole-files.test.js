@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-import {expect, test} from 'vitest';
+import fs from "fs";
+import path from "path";
+import {expect, test} from "vitest";
 
-import {convertJsonToSav, convertSavToJson} from '../../src/converter/converter.js';
+import {convertJsonToSav, convertSavToJson} from "../../src/converter/converter.js";
 
-const folderPath = './test/converter/whole-files/';
+const folderPath = "./test/converter/whole-files/";
 
 for (const fileName of fs.readdirSync(folderPath)) {
     test(fileName, () => {

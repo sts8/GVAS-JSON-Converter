@@ -3,7 +3,7 @@ class IntProperty {
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = 'IntProperty';
+        this.type = "IntProperty";
         savReader.skipBytes(8); // contains value size
 
         this.hasGuid = savReader.readBoolean();

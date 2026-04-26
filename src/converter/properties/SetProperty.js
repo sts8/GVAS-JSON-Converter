@@ -1,8 +1,8 @@
-import SavWriter from '../sav-writer.js';
+import SavWriter from "../sav-writer.js";
 
 class SetProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = 'SetProperty';
+    type = "SetProperty";
 
     constructor(name, savReader) {
         this.name = name;
@@ -11,7 +11,7 @@ class SetProperty {
         this.subtype = savReader.readString();
         savReader.skipBytes(1);
 
-        if (this.subtype === 'StructProperty') {
+        if (this.subtype === "StructProperty") {
             savReader.skipBytes(4); // padding
             const contentCount = savReader.readUInt32();
             this.value = [];
@@ -25,7 +25,7 @@ class SetProperty {
     }
 
     write(writer) {
-        if (this.subtype === 'StructProperty') {
+        if (this.subtype === "StructProperty") {
             const contentCount = this.value.length;
 
             const contentWriter = new SavWriter();

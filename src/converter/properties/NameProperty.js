@@ -1,5 +1,5 @@
 class NameProperty {
-    type = 'NameProperty';
+    type = "NameProperty";
 
     constructor(name, savReader) {
         this.name = name;

@@ -23,21 +23,21 @@ class Timer {
 
         const total = this.steps.at(-1).time - this.start;
 
-        console.log('\n' + '-'.repeat(50));
-        console.log('Final Report:');
-        console.log('-'.repeat(50));
+        console.log("\n" + "-".repeat(50));
+        console.log("Final Report:");
+        console.log("-".repeat(50));
 
         this.steps.forEach(step => {
             this.#printStep(step.label, step.duration, step.duration / total * 100);
         });
 
-        this.#printStep('Total', total);
+        this.#printStep("Total", total);
     }
 
     #printStep(label, duration, percentage = null) {
-        const paddedLabel = label.padEnd(this.longestLabel, ' ');
-        const paddedDuration = duration.toFixed(2).padStart(this.maxDurationLength, ' ');
-        const percentageStr = percentage !== null ? ` (${percentage.toFixed(1).padStart(5, ' ')}%)` : '';
+        const paddedLabel = label.padEnd(this.longestLabel, " ");
+        const paddedDuration = duration.toFixed(2).padStart(this.maxDurationLength, " ");
+        const percentageStr = percentage !== null ? ` (${percentage.toFixed(1).padStart(5, " ")}%)` : "";
         console.log(`${paddedLabel} : ${paddedDuration} ms${percentageStr}`);
     }
 }

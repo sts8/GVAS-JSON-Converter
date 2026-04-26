@@ -8,6 +8,10 @@ export default class SavWriter {
         this.dataView = new DataView(this.array.buffer);
     }
 
+    get result() {
+        return this.array.subarray(0, this.offset);
+    }
+
     #ensure(bytes) {
         if (this.offset + bytes <= this.array.length) return;
         const next = new Uint8Array(Math.max(this.array.length * 2, this.offset + bytes));
@@ -16,12 +20,8 @@ export default class SavWriter {
         this.dataView = new DataView(next.buffer);
     }
 
-    get result() {
-        return this.array.subarray(0, this.offset);
-    }
-
     writeString(string) {
-        if (string === '') {
+        if (string === "") {
             this.#ensure(4);
             this.dataView.setUint32(this.offset, 0, true);
             this.offset += 4;
@@ -106,17 +106,17 @@ export default class SavWriter {
         ];
 
         const reversedQuarters = quarters.map(quarter => {
-            return quarter.match(/.{2}/g).reverse().join('');
+            return quarter.match(/.{2}/g).reverse().join("");
         });
 
-        const hexString = reversedQuarters.join('').toUpperCase();
+        const hexString = reversedQuarters.join("").toUpperCase();
         this.writeHex(hexString);
     }
 
 }
 
 export function getStringByteSize(string) {
-    if (string === '') {
+    if (string === "") {
         return 4;
     }
 

@@ -1,9 +1,9 @@
-import SavWriter from '../sav-writer.js';
-import {assignPrototype} from '../converter.js';
+import SavWriter from "../sav-writer.js";
+import {assignPrototype} from "../converter.js";
 
 class StructProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = 'StructProperty';
+    type = "StructProperty";
 
     constructor(name, savReader) {
         this.name = name;
@@ -16,18 +16,18 @@ class StructProperty {
 
         const contentEndPosition = savReader.offset + contentSize;
 
-        if (this.subtype === 'Guid') {
+        if (this.subtype === "Guid") {
             this.value = savReader.readBytes(16);
             return this;
         }
 
-        if (this.subtype === 'DateTime') {
+        if (this.subtype === "DateTime") {
             this.value = savReader.readInt64();
             return this;
         }
 
-        if (this.subtype === 'Vector2D') {
-            this.value = '(' + savReader.readFloat64() + '/' + savReader.readFloat64() + ')';
+        if (this.subtype === "Vector2D") {
+            this.value = "(" + savReader.readFloat64() + "/" + savReader.readFloat64() + ")";
             return this;
         }
 
@@ -39,36 +39,36 @@ class StructProperty {
     }
 
     write(writer) {
-        if (this.subtype === 'Guid') {
+        if (this.subtype === "Guid") {
             writer.writeString(this.name);
             writer.writeString(this.type);
             writer.writeUInt32(16);
             writer.writeArray(StructProperty.padding);
-            writer.writeString('Guid');
-            writer.writeHex(this.guid + '00');
+            writer.writeString("Guid");
+            writer.writeHex(this.guid + "00");
             writer.writeHex(this.value);
             return;
         }
 
-        if (this.subtype === 'DateTime') {
+        if (this.subtype === "DateTime") {
             writer.writeString(this.name);
             writer.writeString(this.type);
             writer.writeUInt32(8);
             writer.writeArray(StructProperty.padding);
-            writer.writeString('DateTime');
-            writer.writeHex(this.guid + '00');
+            writer.writeString("DateTime");
+            writer.writeHex(this.guid + "00");
             writer.writeInt64(this.value);
             return;
         }
 
-        if (this.subtype === 'Vector2D') {
-            const [x, y] = this.value.slice(1, -1).split('/');
+        if (this.subtype === "Vector2D") {
+            const [x, y] = this.value.slice(1, -1).split("/");
             writer.writeString(this.name);
             writer.writeString(this.type);
             writer.writeUInt32(16);
             writer.writeArray(StructProperty.padding);
-            writer.writeString('Vector2D');
-            writer.writeHex(this.guid + '00');
+            writer.writeString("Vector2D");
+            writer.writeHex(this.guid + "00");
             writer.writeFloat64(x);
             writer.writeFloat64(y);
             return;
@@ -91,7 +91,7 @@ class StructProperty {
         writer.writeUInt32(content.length);
         writer.writeArray(StructProperty.padding);
         writer.writeString(this.subtype);
-        writer.writeHex(this.guid + '00');
+        writer.writeHex(this.guid + "00");
         writer.writeArray(content);
     }
 }

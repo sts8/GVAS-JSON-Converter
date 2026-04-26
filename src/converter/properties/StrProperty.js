@@ -1,11 +1,11 @@
-import {getStringByteSize} from '../sav-writer.js';
+import {getStringByteSize} from "../sav-writer.js";
 
 class StrProperty {
     static PADDING = [0x00, 0x00, 0x00, 0x00];
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = 'StrProperty';
+        this.type = "StrProperty";
         savReader.skipBytes(8); // contains value size + padding
 
         this.hasGuid = savReader.readBoolean();

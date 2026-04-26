@@ -1,10 +1,10 @@
 class EnumProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = 'EnumProperty';
+    type = "EnumProperty";
 
     constructor(name, savReader) {
         this.name = name;
-        this.type = 'EnumProperty';
+        this.type = "EnumProperty";
         savReader.readUInt32(); // contentSize
         savReader.skipBytes(EnumProperty.padding.length);
         this.enum = savReader.readString();

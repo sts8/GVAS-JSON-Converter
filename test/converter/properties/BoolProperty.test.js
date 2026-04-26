@@ -1,10 +1,10 @@
-import {expect, test} from 'vitest';
+import {expect, test} from "vitest";
 
-import SavReader from '../../../src/converter/sav-reader.js';
-import BoolProperty from '../../../src/converter/properties/BoolProperty.js';
-import SavWriter from '../../../src/converter/sav-writer.js';
+import SavReader from "../../../src/converter/sav-reader.js";
+import BoolProperty from "../../../src/converter/properties/BoolProperty.js";
+import SavWriter from "../../../src/converter/sav-writer.js";
 
-test('BoolProperty - True (no GUID)', () => {
+test("BoolProperty - True (no GUID)", () => {
     const data = new Uint8Array([
         /* 17 */                 0x11, 0x00, 0x00, 0x00,
         /* "someBoolProperty" */ 0x73, 0x6F, 0x6D, 0x65, 0x42, 0x6F, 0x6F, 0x6C, 0x50, 0x72, 0x6F, 0x70, 0x65, 0x72, 0x74, 0x79, 0x00,
@@ -17,7 +17,7 @@ test('BoolProperty - True (no GUID)', () => {
 
     const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(BoolProperty);
-    expect(property.name).toBe('someBoolProperty');
+    expect(property.name).toBe("someBoolProperty");
     expect(property.value).toBe(true);
     expect(property.guid).toBeUndefined();
 
@@ -27,7 +27,7 @@ test('BoolProperty - True (no GUID)', () => {
     expect(writer.result).toStrictEqual(data);
 });
 
-test('BoolProperty - False (no GUID)', () => {
+test("BoolProperty - False (no GUID)", () => {
     const data = new Uint8Array([
         /* 17 */                 0x11, 0x00, 0x00, 0x00,
         /* "someBoolProperty" */ 0x73, 0x6F, 0x6D, 0x65, 0x42, 0x6F, 0x6F, 0x6C, 0x50, 0x72, 0x6F, 0x70, 0x65, 0x72, 0x74, 0x79, 0x00,
@@ -40,7 +40,7 @@ test('BoolProperty - False (no GUID)', () => {
 
     const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(BoolProperty);
-    expect(property.name).toBe('someBoolProperty');
+    expect(property.name).toBe("someBoolProperty");
     expect(property.value).toBe(false);
     expect(property.guid).toBeUndefined();
 
@@ -50,7 +50,7 @@ test('BoolProperty - False (no GUID)', () => {
     expect(writer.result).toStrictEqual(data);
 });
 
-test('BoolProperty - True (with GUID)', () => {
+test("BoolProperty - True (with GUID)", () => {
     const data = new Uint8Array([
         /* 7 */               0x07, 0x00, 0x00, 0x00,
         /* "bool-1" */        0x62, 0x6F, 0x6F, 0x6C, 0x2D, 0x31, 0x00,
@@ -64,9 +64,9 @@ test('BoolProperty - True (with GUID)', () => {
 
     const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(BoolProperty);
-    expect(property.name).toBe('bool-1');
+    expect(property.name).toBe("bool-1");
     expect(property.value).toBe(true);
-    expect(property.guid).toBe('DF709F77460B05A6F4B4658FCFD32203');
+    expect(property.guid).toBe("DF709F77460B05A6F4B4658FCFD32203");
 
     const writer = new SavWriter();
     property.write(writer);
@@ -74,7 +74,7 @@ test('BoolProperty - True (with GUID)', () => {
     expect(writer.result).toStrictEqual(data);
 });
 
-test('BoolProperty - False (with GUID)', () => {
+test("BoolProperty - False (with GUID)", () => {
     const data = new Uint8Array([
         /* 7 */               0x07, 0x00, 0x00, 0x00,
         /* "bool-2" */        0x62, 0x6F, 0x6F, 0x6C, 0x2D, 0x32, 0x00,
@@ -88,9 +88,9 @@ test('BoolProperty - False (with GUID)', () => {
 
     const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(BoolProperty);
-    expect(property.name).toBe('bool-2');
+    expect(property.name).toBe("bool-2");
     expect(property.value).toBe(false);
-    expect(property.guid).toBe('4813E0C748F120DDC0AD07B91537E005');
+    expect(property.guid).toBe("4813E0C748F120DDC0AD07B91537E005");
 
     const writer = new SavWriter();
     property.write(writer);

@@ -1,10 +1,10 @@
-import NoneProperty from './NoneProperty.js';
-import SavWriter from '../sav-writer.js';
-import {assignPrototype} from '../converter.js';
+import NoneProperty from "./NoneProperty.js";
+import SavWriter from "../sav-writer.js";
+import {assignPrototype} from "../converter.js";
 
 class ArrayProperty {
     static padding = new Uint8Array([0x00, 0x00, 0x00, 0x00]);
-    type = 'ArrayProperty';
+    type = "ArrayProperty";
 
     constructor(name, savReader) {
         this.name = name;
@@ -14,7 +14,7 @@ class ArrayProperty {
         savReader.skipBytes(1);
 
         switch (this.subtype) {
-            case 'StructProperty':
+            case "StructProperty":
                 const contentCount = savReader.readUInt32();
 
                 const nameAgain = savReader.readString();
@@ -34,7 +34,7 @@ class ArrayProperty {
                 this.value = [];
 
                 switch (this.genericType) {
-                    case 'Guid':
+                    case "Guid":
                         for (let i = 0; i < contentCount; i++) {
                             this.value.push(savReader.readBytes(16));
                         }
@@ -56,7 +56,7 @@ class ArrayProperty {
 
                 break;
 
-            case 'NameProperty':
+            case "NameProperty":
                 const numberOfArrayElements = savReader.readUInt32();
                 this.value = [];
 
@@ -75,11 +75,11 @@ class ArrayProperty {
         const contentCount = this.value.length;
 
         switch (this.subtype) {
-            case 'StructProperty': {
+            case "StructProperty": {
                 const contentWriter = new SavWriter();
 
                 switch (this.genericType) {
-                    case 'Guid':
+                    case "Guid":
                         for (let i = 0; i < contentCount; i++) {
                             contentWriter.writeHex(this.value[i]);
                         }
@@ -120,12 +120,12 @@ class ArrayProperty {
                 writer.writeUInt32(content.length);
                 writer.writeArray(ArrayProperty.padding);
                 writer.writeString(this.genericType);
-                writer.writeHex(this.guid + '00');
+                writer.writeHex(this.guid + "00");
                 writer.writeArray(content);
                 break;
             }
 
-            case 'NameProperty': {
+            case "NameProperty": {
                 const contentWriter = new SavWriter();
                 let contentSize = 4;
                 for (let i = 0; i < contentCount; i++) {

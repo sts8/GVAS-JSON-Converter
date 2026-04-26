@@ -1,10 +1,10 @@
-import {expect, test} from 'vitest';
+import {expect, test} from "vitest";
 
-import SavReader from '../../../src/converter/sav-reader.js';
-import {MulticastInlineDelegateProperty} from '../../../src/converter/properties/index.js';
-import SavWriter from '../../../src/converter/sav-writer.js';
+import SavReader from "../../../src/converter/sav-reader.js";
+import {MulticastInlineDelegateProperty} from "../../../src/converter/properties/index.js";
+import SavWriter from "../../../src/converter/sav-writer.js";
 
-test('MulticastInlineDelegateProperty', () => {
+test("MulticastInlineDelegateProperty", () => {
     const data = new Uint8Array([
         0x1B, 0x00, 0x00, 0x00, 0x4F, 0x6E, 0x57, 0x65, 0x61, 0x70, 0x6F, 0x6E,
         0x4D, 0x61, 0x69, 0x6E, 0x74, 0x65, 0x6E, 0x61, 0x6E, 0x63, 0x65, 0x43,
@@ -42,17 +42,17 @@ test('MulticastInlineDelegateProperty', () => {
 
     const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(MulticastInlineDelegateProperty);
-    expect(property.name).toBe('OnWeaponMaintenanceChanged');
+    expect(property.name).toBe("OnWeaponMaintenanceChanged");
     expect(property.elements.length).toBe(2);
 
     expect(property.elements[0]).toStrictEqual([
-        '/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.ConsoleScreen_Season01_C_2147221655',
-        'OnWeaponMaintenanceChanged'
+        "/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.ConsoleScreen_Season01_C_2147221655",
+        "OnWeaponMaintenanceChanged"
     ]);
 
     expect(property.elements[1]).toStrictEqual([
-        '/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.Menu_Seasons_C_2147211803.WidgetTree.WND_WeaponMaintenance',
-        'OnSavegameChanged'
+        "/Engine/Transient.GameEngine_2147482593:BP_GameInstance_C_2147482579.Menu_Seasons_C_2147211803.WidgetTree.WND_WeaponMaintenance",
+        "OnSavegameChanged"
     ]);
 
     const writer = new SavWriter();
