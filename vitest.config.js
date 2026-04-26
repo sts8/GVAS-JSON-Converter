@@ -1,8 +1,7 @@
-import {defineConfig} from 'vitest/config';
+import {defineConfig} from "vitest/config";
 
 export default defineConfig({
     test: {
-        environment: 'node',
-        testTimeout: 120000,
+        environment: "node"
     }
 });

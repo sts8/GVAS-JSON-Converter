@@ -1,16 +1,16 @@
 {
-  "name": "gvas-json-converter",
-  "description": "Convert Unreal Engine .sav files to JSON and vice versa.",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "test": "vitest run"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "benchmark": "latest",
-    "vite": "latest",
-    "vitest": "latest"
-  }
+    "name": "gvas-json-converter",
+    "description": "Convert Unreal Engine .sav files to JSON and vice versa.",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "test": "vitest run"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "benchmark": "latest",
+        "vite": "latest",
+        "vitest": "latest"
+    }
 }

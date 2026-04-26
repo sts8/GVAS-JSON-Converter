@@ -1,18 +1,18 @@
-import {defineConfig} from 'vite';
-import {execSync} from 'child_process';
+import {defineConfig} from "vite";
+import {execSync} from "child_process";
 
-const commitHash = execSync('git describe --always --dirty').toString().trim();
-const buildTime = new Date().toLocaleString('de-DE', {
-    timeZone: 'Europe/Berlin',
-    dateStyle: 'medium',
-    timeStyle: 'medium'
+const commitHash = execSync("git describe --always --dirty").toString().trim();
+const buildTime = new Date().toLocaleString("de-DE", {
+    timeZone: "Europe/Berlin",
+    dateStyle: "medium",
+    timeStyle: "medium"
 });
 
 export default defineConfig({
-    root: 'src/website',
-    base: './',
+    root: "src/website",
+    base: "./",
     build: {
-        outDir: '../../dist',
+        outDir: "../../dist",
         emptyOutDir: true
     },
     server: {
@@ -21,6 +21,6 @@ export default defineConfig({
     },
     define: {
         __COMMIT_HASH__: JSON.stringify(commitHash),
-        __BUILD_TIME__: JSON.stringify(buildTime),
+        __BUILD_TIME__: JSON.stringify(buildTime)
     }
 });
