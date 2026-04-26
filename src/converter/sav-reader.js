@@ -5,17 +5,17 @@ import {
 } from "./properties/index.js";
 
 // https://stackoverflow.com/a/50868276
-function arrayBufferToHexString(arrayBuffer) {
-    return [...new Uint8Array(arrayBuffer)].reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
+function toHexString(bytes) {
+    return [...bytes].reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
 }
 
 class SavReader {
 
-    constructor(fileArrayBuffer) {
+    constructor(bytes) {
         this.offset = 0;
-        this.fileArrayBuffer = fileArrayBuffer;
-        this.fileSize = fileArrayBuffer.byteLength;
-        this.dataView = new DataView(fileArrayBuffer);
+        this.bytes = bytes;
+        this.fileSize = bytes.byteLength;
+        this.dataView = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
         this.propertyHistogram = {};
     }
 
@@ -63,7 +63,7 @@ class SavReader {
     readProperty() {
 
         if (this.offset + FileEndProperty.bytes.length === this.fileSize) {
-            const assumedFileEnd = new Uint8Array(this.fileArrayBuffer.slice(this.offset, this.offset + FileEndProperty.bytes.length));
+            const assumedFileEnd = this.bytes.subarray(this.offset, this.offset + FileEndProperty.bytes.length);
 
             if (assumedFileEnd.every((value, index) => value === FileEndProperty.bytes[index])) {
                 this.offset += FileEndProperty.bytes.length;
@@ -130,7 +130,7 @@ class SavReader {
         const size = this.dataView.getUint32(this.offset, true);
         this.offset += 4;
 
-        const string = new TextDecoder().decode(this.fileArrayBuffer.slice(this.offset, this.offset + size - 1));
+        const string = new TextDecoder().decode(this.bytes.subarray(this.offset, this.offset + size - 1));
         this.offset += size;
 
         // console.log("read string: ", string);
@@ -212,7 +212,7 @@ class SavReader {
     // }
 
     readBytes(numberOfBytes) {
-        const bytes = arrayBufferToHexString(this.fileArrayBuffer.slice(this.offset, this.offset + numberOfBytes));
+        const bytes = toHexString(this.bytes.subarray(this.offset, this.offset + numberOfBytes));
         this.offset += numberOfBytes;
         return bytes;
     }

@@ -15,7 +15,7 @@ test('UInt32Property', () => {
         /* 789 */                   0x15, 0x03, 0x00, 0x00
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(UInt32Property);
     expect(property.name).toBe('someUInt32Property');
     expect(property.guid).toBeUndefined();

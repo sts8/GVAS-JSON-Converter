@@ -22,7 +22,7 @@ test('ByteProperty - CharacterGameDifficulty', () => {
         /* value */                 0x01
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(ByteProperty);
     expect(property.name).toBe('CharacterGameDifficulty');
     expect(property.subtype).toBe('None');
@@ -49,7 +49,7 @@ test('ByteProperty - byte-1 writer', () => {
         /* 123 */            0x7B
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(ByteProperty);
     expect(property.name).toBe('byte-1');
     expect(property.guid).toBe('58CA034B41244E912C4B5DA51E18B3D5');
@@ -72,7 +72,7 @@ test('ByteProperty - byte-2', () => {
         0xF3, 0x6B, 0x46, 0x80, 0x65, 0xFF
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(ByteProperty);
     expect(property.name).toBe('byte-2');
     expect(property.guid).toBe('D64C820047169642F3594A8D6580466B');

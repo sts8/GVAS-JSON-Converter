@@ -16,7 +16,7 @@ test('Int64Property - int64-1', () => {
         /* 9223372036854775807 */  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x7F,
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(Int64Property);
     expect(property.name).toBe('int64-1');
     expect(property.guid).toBe('A91206AD4197A87B207B1DBF0BB0EC6A');
@@ -40,7 +40,7 @@ test('Int64Property - int64-2', () => {
         /* -5 */                   0xFB, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(Int64Property);
     expect(property.name).toBe('int64-2');
     expect(property.guid).toBe('E852E17A42E568E174E4ED930BD6426D');

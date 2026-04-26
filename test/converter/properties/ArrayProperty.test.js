@@ -46,7 +46,7 @@ test('ArrayProperty - NameProperty', () => {
         0x53, 0x6B, 0x69, 0x6E, 0x43, 0x6F, 0x6C, 0x6F, 0x72, 0x4D, 0x61, 0x6C, 0x65, 0x30, 0x30, 0x38, 0x00
     ]);
 
-    const someArrayProperty = new SavReader(ArrayPropertyBytes.buffer).readProperty();
+    const someArrayProperty = new SavReader(ArrayPropertyBytes).readProperty();
 
     expect(someArrayProperty).toBeInstanceOf(ArrayProperty);
     expect(someArrayProperty.name).toBe('CharacterPresetData');

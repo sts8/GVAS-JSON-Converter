@@ -15,7 +15,7 @@ test('BoolProperty - True (no GUID)', () => {
         /* has guid: False */    0x00
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(BoolProperty);
     expect(property.name).toBe('someBoolProperty');
     expect(property.value).toBe(true);
@@ -38,7 +38,7 @@ test('BoolProperty - False (no GUID)', () => {
         /* has guid: False */    0x00
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(BoolProperty);
     expect(property.name).toBe('someBoolProperty');
     expect(property.value).toBe(false);
@@ -62,7 +62,7 @@ test('BoolProperty - True (with GUID)', () => {
         /* guid */            0x77, 0x9F, 0x70, 0xDF, 0xA6, 0x05, 0x0B, 0x46, 0x8F, 0x65, 0xB4, 0xF4, 0x03, 0x22, 0xD3, 0xCF
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(BoolProperty);
     expect(property.name).toBe('bool-1');
     expect(property.value).toBe(true);
@@ -86,7 +86,7 @@ test('BoolProperty - False (with GUID)', () => {
         /* guid */            0xC7, 0xE0, 0x13, 0x48, 0xDD, 0x20, 0xF1, 0x48, 0xB9, 0x07, 0xAD, 0xC0, 0x05, 0xE0, 0x37, 0x15
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(BoolProperty);
     expect(property.name).toBe('bool-2');
     expect(property.value).toBe(false);

@@ -18,8 +18,8 @@ function assignPrototype(rawProperty) {
     return instance;
 }
 
-function convertSavToJson(savFileArrayBuffer) {
-    const parsedContent = new SavReader(savFileArrayBuffer).readWholeBuffer();
+function convertSavToJson(bytes) {
+    const parsedContent = new SavReader(bytes).readWholeBuffer();
     return JSON.stringify(parsedContent, null, 2);
 }
 

@@ -21,7 +21,7 @@ function loadSavFile() {
     fileReader.fileName = this.files[0].name;
 
     fileReader.onload = function (e) {
-        downloadJson(fileReader.fileName + ".json", convertSavToJson(e.target.result));
+        downloadJson(fileReader.fileName + ".json", convertSavToJson(new Uint8Array(e.target.result)));
     };
 
     fileReader.readAsArrayBuffer(this.files[0]);

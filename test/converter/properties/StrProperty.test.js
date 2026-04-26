@@ -28,7 +28,7 @@ test('StrProperty', () => {
         0x63, 0x6F, 0x00
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(StrProperty);
     expect(property.name).toBe('TutorialName');
     expect(property.value).toBe('Tutorial_Hint_PlagueWarning_SporeTowerCleaning_Bosco');

@@ -16,7 +16,7 @@ test('IntProperty int-1 (with GUID)', () => {
         /* 123 */               0x7B, 0x00, 0x00, 0x00
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(IntProperty);
     expect(property.name).toBe('int-1');
     expect(property.guid).toBe('97F8C73246DB647220B8618D6AFF8ED6');
@@ -40,7 +40,7 @@ test('IntProperty int-2 (with GUID)', () => {
         /* -321 */              0xBF, 0xFE, 0xFF, 0xFF
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(IntProperty);
     expect(property.name).toBe('int-2');
     expect(property.guid).toBe('C363F31647E6FD3E9E0712BE6CEAAB15');
@@ -64,7 +64,7 @@ test('IntProperty asd-integer (with GUID)', () => {
         /* 333 */               0x4D, 0x01, 0x00, 0x00
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(IntProperty);
     expect(property.name).toBe('asd-integer');
     expect(property.guid).toBe('3837A0184F9073461582DA859363636F');
@@ -87,7 +87,7 @@ test('IntProperty someIntProperty (no GUID)', () => {
         /* 123 */               0x7B, 0x00, 0x00, 0x00
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(IntProperty);
     expect(property.name).toBe('someIntProperty');
     expect(property.guid).toBeUndefined();

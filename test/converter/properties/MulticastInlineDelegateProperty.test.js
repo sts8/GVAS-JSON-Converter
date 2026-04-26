@@ -40,7 +40,7 @@ test('MulticastInlineDelegateProperty', () => {
         0x64, 0x00
     ]);
 
-    const property = new SavReader(data.buffer).readProperty();
+    const property = new SavReader(data).readProperty();
     expect(property).toBeInstanceOf(MulticastInlineDelegateProperty);
     expect(property.name).toBe('OnWeaponMaintenanceChanged');
     expect(property.elements.length).toBe(2);

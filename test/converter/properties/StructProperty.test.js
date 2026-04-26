@@ -27,7 +27,7 @@ test('StructProperty - DateTime', () => {
         /* value */                   0x50, 0x2C, 0xE2, 0x18, 0x03, 0x92, 0xDB, 0x08
     ]);
 
-    const someStructProperty = new SavReader(bytes.buffer).readProperty();
+    const someStructProperty = new SavReader(bytes).readProperty();
     expect(someStructProperty).toBeInstanceOf(StructProperty);
     expect(someStructProperty.name).toBe('SaveTime');
     expect(someStructProperty.subtype).toBe('DateTime');
@@ -59,7 +59,7 @@ test('StructProperty - DateTime 2', () => {
         0xB8, 0x9B, 0x73, 0x22, 0x2C, 0x00, 0x00, 0x00
     ]);
 
-    const someStructProperty = new SavReader(bytes.buffer).readProperty();
+    const someStructProperty = new SavReader(bytes).readProperty();
     expect(someStructProperty).toBeInstanceOf(StructProperty);
     expect(someStructProperty.name).toBe('GameTime');
     expect(someStructProperty.subtype).toBe('DateTime');
